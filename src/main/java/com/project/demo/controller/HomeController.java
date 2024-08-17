@@ -13,6 +13,7 @@ public class HomeController {
     private final DemoService service;
     @RequestMapping("/demo")
     public ResponseEntity<Integer> test(@RequestParam int memberId){
+        System.out.println(memberId);
         int result = service.insertName(memberId);
         return ResponseEntity.ok(result);
     }

@@ -4,6 +4,6 @@
 
 <mapper namespace="test">
     <insert id="insertName" parameterType="int">
-        INSERT INTO MEMBER VALUES(#{name})
+        INSERT INTO MEMBER (MEMBER_ID) VALUES (#{memberId})
     </insert>
 </mapper>
