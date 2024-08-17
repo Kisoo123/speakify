@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 public class DemoDao {
 
     public int insertName(SqlSessionTemplate session, int memberId){
+        System.out.println(memberId+"daotest");
         return session.insert("test.insertName",memberId);
     }
 }
