@@ -20,6 +20,8 @@ public class HomeController {
     }
     @GetMapping("/")
     public String home() {
+        System.out.println("dsaklndslk");
+
         return "index";
     }
 
