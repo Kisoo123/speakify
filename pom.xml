@@ -14,12 +14,6 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/jakarta.el/jakarta.el-api -->
-    <dependency>
-      <groupId>jakarta.el</groupId>
-      <artifactId>jakarta.el-api</artifactId>
-      <version>5.0.0</version>
-    </dependency>
 
 
     <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
