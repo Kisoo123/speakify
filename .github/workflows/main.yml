@@ -23,3 +23,5 @@ jobs:
           script: |
                   cd /home/ubuntu/deepen
                   git pull
+                  mv target/untitled-1.0-SNAPSHOT.war /opt/tomcat/webapps/  # 외장 톰캣의 webapps 경로로 .war 파일을 이동
+                  sudo systemctl restart tomcat  # 톰캣 서비스 재시작
