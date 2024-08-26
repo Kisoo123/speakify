@@ -23,5 +23,10 @@ public class HomeController {
 
         return "index";
     }
+    @GetMapping("/deep")
+    public String deep() {
+        System.out.println("dsaklndslk");
 
+        return "deep/deep";
+    }
 }
