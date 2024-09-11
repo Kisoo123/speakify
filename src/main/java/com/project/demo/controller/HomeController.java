@@ -27,4 +27,5 @@ public class HomeController {
         return "/product/productHome"; // targetPage.jsp 또는 HTML 파일로 이동
     }
 
+
 }
