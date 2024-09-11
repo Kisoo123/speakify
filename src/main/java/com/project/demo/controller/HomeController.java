@@ -28,6 +28,4 @@ public class HomeController {
     }
 
 
-        return "deep/deep";
     }
-}
