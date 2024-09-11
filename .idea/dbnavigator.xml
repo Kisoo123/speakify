@@ -19,7 +19,17 @@
     <connection id="9ac98096-6979-4e38-9f9b-781b088f7dd4">
       <console name="Connection 1" type="STANDARD" schema="msql" session="Pool"><![CDATA[use msql;
 select * from MEMBER;
-commit;]]></console>
+
+
+ALTER TABLE `MEMBER`
+ADD COLUMN `NAME` VARCHAR(50) NULL,
+ADD COLUMN `AGE` int NULL,
+ADD COLUMN `PHONE` VARCHAR(50) NULL,
+ADD COLUMN `GENDER` VARCHAR(50) NULL,
+ADD COLUMN `ADDRESS` VARCHAR(50) NULL,
+ADD COLUMN `EMAIL` VARCHAR(50) NULL;
+
+CREATE TABLE PRODUCT]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
