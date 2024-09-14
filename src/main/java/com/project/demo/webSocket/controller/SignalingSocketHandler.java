@@ -1,5 +1,6 @@
-package com.project.webSocket.controller;
+package com.project.demo.webSocket.controller;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -7,11 +8,15 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class SignalingSocketHandler extends TextWebSocketHandler {
 
     // 연결된 클라이언트 세션을 저장할 리스트
     private List<WebSocketSession> sessions = new ArrayList<>();
+
+    public SignalingSocketHandler() {
+        System.out.println("SignalingSocketHandler initialized");
+    }
 
     // 새 연결이 맺어졌을 때 호출
     @Override

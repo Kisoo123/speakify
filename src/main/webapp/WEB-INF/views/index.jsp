@@ -13,37 +13,47 @@
     const socket = new WebSocket("ws://localhost:8080/signal");
     const peerConnection = new RTCPeerConnection();
 
+
     // Media constraints 정의
     const constraints = {
-        audio: true,
-        video: false  // 비디오 사용하지 않기
+        audio: true
     };
 
     // 미디어 스트림 요청 및 피어 연결에 추가
     function startSignaling() {
-        navigator.mediaDevices.getUserMedia(constraints)
+        navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
-                // 스트림의 오디오 트랙을 피어 연결에 추가
+                console.log("Local audio stream added:", stream);
                 stream.getAudioTracks().forEach(track => peerConnection.addTrack(track, stream));
             })
-            .catch(error => console.error('Error accessing media devices.', error));
+            .catch(error => {
+                console.error('Error accessing media devices:', error);
+            });
+
 
         peerConnection.createOffer().then(offer => {
-            peerConnection.setLocalDescription(offer);
+            console.log("Created offer:", offer);
+            return peerConnection.setLocalDescription(offer);
+        }).then(() => {
             socket.send(JSON.stringify({
                 type: 'offer',
-                offer: offer
+                offer: peerConnection.localDescription
             }));
-        });
+        }).catch(error => console.error("Error creating offer:", error));
+
     }
 
-    // ICE 후보 처리
+
+    // ICE Candidate 수집 확인
     peerConnection.onicecandidate = event => {
         if (event.candidate) {
+            console.log("Collected ICE candidate:", event.candidate);
             socket.send(JSON.stringify({
                 type: 'candidate',
                 candidate: event.candidate
             }));
+        } else {
+            console.log("All ICE candidates have been sent.");
         }
     };
 
