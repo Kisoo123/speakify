@@ -10,7 +10,8 @@
 <h2 id="test">Click here to start voice chat</h2>
 
 <script>
-    const socket = new WebSocket("ws://localhost:8080/signal");
+    const contextPath = '<%= request.getContextPath() %>';
+    const socket = new WebSocket(`ws://${location.host}${contextPath}/signal`);
     const peerConnection = new RTCPeerConnection();
 
 
