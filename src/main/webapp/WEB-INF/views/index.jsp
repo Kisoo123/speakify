@@ -8,6 +8,9 @@
 <body>
 <h2>Voice Chat</h2>
 <h2 id="test">Click here to start voice chat</h2>
+<label for="userId">User ID:</label>
+<input type="text" id="userId" placeholder="Enter your ID">
+<button id="connect">Connect</button>
 
 <script>
     const contextPath = '<%= request.getContextPath() %>';
@@ -22,6 +25,12 @@
 
     // 미디어 스트림 요청 및 피어 연결에 추가
     function startSignaling() {
+        // 현재 연결 상태 확인
+        if (peerConnection.signalingState !== "stable") {
+            console.log("Connection is not stable, offer creation aborted.");
+            return; // 이미 offer가 진행 중일 때 중복 생성 방지
+        }
+
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
                 console.log("Local audio stream added:", stream);
