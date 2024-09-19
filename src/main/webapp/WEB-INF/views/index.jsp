@@ -14,9 +14,16 @@
 
 <script>
     const contextPath = '<%= request.getContextPath() %>';
-    const socket = new WebSocket(`wss://${location.host}${contextPath}/signal`);
-    const peerConnection = new RTCPeerConnection();
+    let socket = new WebSocket(`ws://${location.host}${contextPath}/signal`);
+    let peerConnection = new RTCPeerConnection();
 
+    // 웹소켓 재연결 메소드
+    function initializeWebSocket() {
+        if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+            console.log("WebSocket is closed. Reconnecting...");
+            socket = new WebSocket(`wss://${location.host}${contextPath}/signal`);
+        }
+    }
 
     // Media constraints 정의
     const constraints = {
@@ -50,30 +57,51 @@
                 offer: peerConnection.localDescription
             }));
         }).catch(error => console.error("Error creating offer:", error));
-
     }
 
+    // ICE 후보 수집과 원격 스트림 처리 설정 함수
+    function setupPeerConnectionHandlers(peerConnection) {
+        // ICE 후보 수집
+        peerConnection.onicecandidate = event => {
+            if (event.candidate) {
+                console.log("Collected ICE candidate:", event.candidate);
+                socket.send(JSON.stringify({
+                    type: 'candidate',
+                    candidate: event.candidate
+                }));
+            } else {
+                console.log("All ICE candidates have been sent.");
+            }
+        };
 
-    // ICE Candidate 수집 확인
-    peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-            console.log("Collected ICE candidate:", event.candidate);
-            socket.send(JSON.stringify({
-                type: 'candidate',
-                candidate: event.candidate
-            }));
-        } else {
-            console.log("All ICE candidates have been sent.");
+        // 원격 스트림 처리
+        peerConnection.ontrack = event => {
+            const remoteAudio = document.createElement('audio');
+            remoteAudio.srcObject = event.streams[0];
+            remoteAudio.autoplay = true;
+            document.body.appendChild(remoteAudio);
+        };
+
+        // 연결 상태 변경 시
+        peerConnection.oniceconnectionstatechange = () => {
+            console.log("ICE Connection State: ", peerConnection.iceConnectionState);
+            if (peerConnection.iceConnectionState === 'failed' || peerConnection.iceConnectionState === 'disconnected') {
+                console.log("Recreating peer connection...");
+                recreatePeerConnection();
+            }
+        };
+    }
+
+    function recreatePeerConnection() {
+        if (peerConnection) {
+            peerConnection.close();
         }
-    };
 
-    // 원격 스트림 처리
-    peerConnection.ontrack = event => {
-        const remoteAudio = document.createElement('audio');
-        remoteAudio.srcObject = event.streams[0];
-        remoteAudio.autoplay = true;
-        document.body.appendChild(remoteAudio);
-    };
+        peerConnection = new RTCPeerConnection();
+
+        // ICE 후보 수집과 원격 스트림 처리 설정
+        setupPeerConnectionHandlers(peerConnection);
+    }
 
     // 소켓 메시지 처리
     socket.onmessage = message => {
@@ -97,7 +125,9 @@
 
     $(document).ready(function(){
         $("#test").click(function(){
+            initializeWebSocket();
             startSignaling();
+            setupPeerConnectionHandlers(peerConnection); // 피어 연결 핸들러 설정
         });
     });
 </script>
