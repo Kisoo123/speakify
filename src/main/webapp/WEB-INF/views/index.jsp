@@ -14,7 +14,7 @@
 
 <script>
     const contextPath = '<%= request.getContextPath() %>';
-    let socket = new WebSocket(`ws://${location.host}${contextPath}/signal`);
+    let socket = new WebSocket(`wss://${location.host}${contextPath}/signal`);
     let peerConnection = new RTCPeerConnection();
 
     // 웹소켓 재연결 메소드
