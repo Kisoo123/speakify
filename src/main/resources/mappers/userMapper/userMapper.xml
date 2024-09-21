@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserMapper">
+    <select id="findByUsername" parameterType="String">
+        SELECT * FROM users WHERE USERNAME = #{username}
+    </select>
+    <insert id="saveUser" parameterType="com.project.security.model.dto.User">
+        INSERT INTO users (id, username, password, role, profile_picture_url, email, display_name, status_message)
+        VALUES (#{id}, #{username}, #{password}, #{role}, #{profilePictureUrl}, #{email}, #{displayName}, #{statusMessage});
+    </insert>
+</mapper>

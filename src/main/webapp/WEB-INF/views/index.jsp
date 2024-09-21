@@ -11,6 +11,7 @@
 <label for="userId">User ID:</label>
 <input type="text" id="userId" placeholder="Enter your ID">
 <button id="connect">Connect</button>
+<a href="/login">dasdsa</a>
 
 <script>
     const contextPath = '<%= request.getContextPath() %>';
