@@ -1,0 +1,15 @@
+/* 사이드바 토글 버튼 */
+#toggle-sidebar {
+    padding: 10px;
+    background-color: #000000;
+    color: #cdcdcd;
+    cursor: pointer;
+    border: none;
+    margin: 0;
+    width: 96px;
+    margin-left: 65px;
+}
+
+#header-div {
+    background-color: #000000;
+}

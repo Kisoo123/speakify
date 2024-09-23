@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    background-color: #ffffff;
+}
+#contactButton{
+    display: flex;
+    justify-content: space-around;
+}
+
+/* 사이드바 */
+#sidebar {
+    width: 0;
+    height: 100vh;
+    background-color: #000000;
+    color: white;
+    transition: width 0.3s;
+    overflow-x: hidden;
+}
+
+/* 메인 콘텐츠 */
+#main-content {
+    flex: 1;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+/* 사이드바 링크 */
+#sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+.sidebar-open #sidebar {
+    width: 250px;
+}
+
+.sidebar-open #main-content {
+    margin-left: 250px;
+}
+
+
+
+#main-div {
+    margin-left: 10px;
+}
+
+#root-div{
+    display: flex;
+    height: 100%;
+}
+
+#header-main-div{
+    width: 100%;
+}
+
+#header-main{
+    display: flex;
+}
+
+#innder-sidebar{
+    margin-top: 16px;
+}
+#login-form-div{
+    display: flex;
+    justify-content: center;
+}
+#find-accountment{
+    margin-top: 28px;
+
+}
+.sidebar-icons{
+    margin-top: 8px;
+    width: 24px;
+    height: 24px;
+}

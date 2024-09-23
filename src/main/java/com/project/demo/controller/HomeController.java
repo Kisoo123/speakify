@@ -13,10 +13,7 @@ public class HomeController {
     public String home() {
         return "index";
     }
-    @GetMapping("/home")
-    public String homeRedirect() {
-        return "index";  // /home 요청 시에도 index.jsp 반환
-    }
+
     @GetMapping("/login")
     public String login() {
         return "security/login";
@@ -25,5 +22,6 @@ public class HomeController {
     public String register() {
         return "security/register";
     }
+
 
 }
