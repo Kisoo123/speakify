@@ -7,7 +7,26 @@
         SELECT * FROM users WHERE USERNAME = #{username}
     </select>
     <insert id="saveUser" parameterType="com.project.security.model.dto.User">
-        INSERT INTO users (id, username, password, role, profile_picture_url, email, display_name, status_message)
-        VALUES (#{id}, #{username}, #{password}, "USER", #{profilePictureUrl}, #{email}, #{displayName}, #{statusMessage});
+        INSERT INTO users (id, username, password, role, profile_picture_url, email, display_name, status_message, uniqueTag)
+        VALUES (#{id}, #{username}, #{password}, "USER", "default-profile-img-white.png", #{email}, #{displayName}, #{statusMessage},#{uniqueTag})
     </insert>
+
+    <select id="isTagExists" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM users WHERE uniqueTag= #{tag}
+    </select>
+    <insert id="insertDisplayNumberSequence">
+        INSERT INTO display_number_sequence_table VALUES(NULL)
+    </insert>
+
+    <select id="getNextDisplayNumber" resultType="int">
+        SELECT LAST_INSERT_ID()
+    </select>
+    <select id="searchUsersByKeyword" parameterType="Map" resultType="com.project.security.model.dto.User">
+        SELECT *
+        FROM users
+        WHERE users.display_name LIKE CONCAT('%', #{displayName}, '%')
+        <if test="tagPart != null and tagPart.length() == 4">
+            AND uniqueTag = #{uniqueTag}
+        </if>
+    </select>
 </mapper>

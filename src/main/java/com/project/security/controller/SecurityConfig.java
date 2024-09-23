@@ -32,7 +32,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MyUserDetailsService userDetailsService) throws Exception {
         http.authorizeHttpRequests((authz) -> authz // 최신 방식으로 변경
-                        .requestMatchers("/", "/register", "/login","/login?error", "/resources/**", "/static/**", "/home", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/","/search", "/register", "/login","/login?error", "/resources/**", "/static/**", "/home", "/css/**", "/js/**", "/images/**").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .dispatcherTypeMatchers(DispatcherType.INCLUDE).permitAll()
                         .anyRequest().authenticated()

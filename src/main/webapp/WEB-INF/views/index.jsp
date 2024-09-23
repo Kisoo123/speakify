@@ -27,6 +27,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <c:import url="${path}/WEB-INF/views/common/header.jsp"/>
 
 <div id="root-div">
@@ -36,9 +37,14 @@
             <div id="contactButton">
                 <img class="sidebar-icons" src="${path}/images/icon/user-icon-white.png">
                 <img class="sidebar-icons" src="${path}/images/icon/users-icon-white.png">
-                <img class="sidebar-icons" src="${path}/images/icon/search-icon-white.png">
+                <img class="sidebar-icons" id="toggle-search" src="${path}/images/icon/search-icon-white.png">
             </div>
         </div>
+        <div id="search-input-container">
+            <input type="text" id="search-input" placeholder="유저이름 검색" style="display:none;">
+        </div>
+        <div id="search-result"></div>
+
     </div>
     <div id="header-main-div">
 
@@ -87,14 +93,73 @@
 </body>
 
 <script>
-    //로그인 관련
+    /*              로그인 관련              */
+    // 클릭하면 회원가입창으로 이동
     let register = () => {
         window.location.href = '${path}/register';
     }
-    // 사이드바
+
+    /*             사이드바             */
+    // 사이드바 띄우기
     document.getElementById("toggle-sidebar").addEventListener("click", function () {
         document.body.classList.toggle("sidebar-open");
     });
+
+    //사이드바 검색 아이콘 클릭
+    $(document).ready(function() {
+        // search 아이콘 클릭 시 input을 표시하거나 숨김
+        $("#toggle-search").click(function() {
+            $("#search-input").toggle();  // input 태그의 표시/숨김을 토글
+            $("#search-input").focus();   // input에 포커스를 줌
+        });
+    });
+
+    // 유저 검색
+
+    // 검색창에 입력할 때마다 실시간으로 결과 처리
+    $('#search-input').on('keyup', function() {
+        let query = $(this).val();  // 입력된 검색어 가져오기
+
+        // 입력값이 없으면 검색 결과 초기화
+        if (query.length === 0) {
+            $('#search-result').empty();
+            return;
+        }
+
+        // AJAX 요청으로 서버에 검색 요청
+        $.ajax({
+            url: '/search',  // 검색을 처리할 서버의 엔드포인트
+            method: 'POST',
+            data: { keyword: query },  // 검색어를 쿼리로 전달
+            success: function(response) {
+                console.log(response);
+                console.log("반환됨");
+                $('#search-result').empty();  // 검색 결과 초기화
+                console.log()
+                // 서버에서 받은 데이터를 처리해서 결과를 동적으로 추가
+                response.forEach(user => {
+                    let userElement = `
+                    <a href="#" class="list-group-item list-group-item-action py-2 lh-tight bg-dark">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">\${user.display_name}</strong>
+                            <small class="text-muted">\${user.statusMessage}</small>
+                        </div>
+                    </a>`;
+                    $('#search-result').append(userElement);
+                });
+
+                // 검색 결과가 없을 경우 메시지 출력
+                if (response.length === 0) {
+                    $('#search-result').append('<p class="text-muted">검색 결과가 없습니다.</p>');
+                }
+            },
+            error: function() {
+                $('#search-result').html('<p class="text-danger">검색 중 오류가 발생했습니다.</p>');
+            }
+        });
+    });
+
+
 
     // 음성채팅 관련
     const contextPath = '<%= request.getContextPath() %>';
