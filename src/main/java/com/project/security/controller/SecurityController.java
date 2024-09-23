@@ -13,6 +13,6 @@ public class SecurityController {
     @PostMapping("/register")
     public String saveUser(User user){
         service.saveUser(user);
-        return "redirect:/login";
+        return "redirect:/";
     }
 }

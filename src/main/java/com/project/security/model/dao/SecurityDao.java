@@ -17,4 +17,15 @@ public class SecurityDao {
     public void saveUser(User user) {
         session.insert("UserMapper.saveUser", user);
     }
+    public boolean isTagExists(String tag){
+        Integer count = session.selectOne("UserMapper.isTagExists", tag);
+        return count != null && count > 0;
+    }
+    public void insertDisplayNumberSequence(){
+        session.insert("UserMapper.insertDisplayNumberSequence");
+    }
+    public int getNextDisplayNumber(){
+        return session.selectOne("UserMapper.getNextDisplayNumber");
+    }
+
 }

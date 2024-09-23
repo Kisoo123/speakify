@@ -63,6 +63,7 @@ body {
 
 #innder-sidebar{
     margin-top: 16px;
+    margin-bottom: 23px;
 }
 #login-form-div{
     display: flex;
@@ -76,4 +77,11 @@ body {
     margin-top: 8px;
     width: 24px;
     height: 24px;
+}
+#search-input-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+
 }
