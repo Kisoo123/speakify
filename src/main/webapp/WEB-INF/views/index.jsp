@@ -1,21 +1,104 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<%
+    response.setHeader("Pragma", "No-cache");
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setDateHeader("Expires", -1);
+%>
 <!DOCTYPE html>
 <html lang="en">
+<c:set var="path" value="${pageContext.request.contextPath}"/>
+
+
 <head>
     <meta charset="UTF-8">
-    <title>Voice Chat</title>
+    <title>SPEAKIFY</title>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="${path}/css/index.css?ver=<%= System.currentTimeMillis() %>">
+    <link rel="stylesheet" type="text/css" href="${path}/css/header.css?ver=<%= System.currentTimeMillis()%>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h2>Voice Chat</h2>
-<h2 id="test">Click here to start voice chat</h2>
-<label for="userId">User ID:</label>
-<input type="text" id="userId" placeholder="Enter your ID">
-<button id="connect">Connect</button>
-<a href="/login">dasdsa</a>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+<c:import url="${path}/WEB-INF/views/common/header.jsp"/>
+
+<div id="root-div">
+    <%-- 사이드바 --%>
+    <div id="sidebar">
+        <div id="innder-sidebar">
+            <div id="contactButton">
+                <img class="sidebar-icons" src="${path}/images/icon/user-icon-white.png">
+                <img class="sidebar-icons" src="${path}/images/icon/users-icon-white.png">
+                <img class="sidebar-icons" src="${path}/images/icon/search-icon-white.png">
+            </div>
+        </div>
+    </div>
+    <div id="header-main-div">
+
+        <div id="main-div">
+            <p>principal : <sec:authentication property="principal"/></p>
+            <p>principal : <sec:authentication property="authorities"/></p>
+            <h2 id="test">Click here to start voice chat</h2>
+            <a href="/login">dasdsa</a>
+        </div>
+        <sec:authorize access="isAnonymous()">
+
+            <div id="login-form-div">
+
+                <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" action="${path}/login" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Username"
+                               name="username">
+                        <label for="floatingInput">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                               name="password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" value="remember-me" name="remember-me"> Remember me
+                        </label>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-dark" type="submit">Sign in</button>
+                    <div id="find-accountment">
+                        <button type="button" class="btn btn-link">아이디찾기</button>
+                        <button type="button" class="btn btn-link">비밀번호찾기</button>
+                        <button type="button" class="btn btn-link" onclick="register()">회원가입</button>
+                    </div>
+                    <hr class="my-3">
+                    <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+                </form>
+            </div>
+        </sec:authorize>
+    </div>
+
+</div>
+
+
+</body>
 
 <script>
+    //로그인 관련
+    let register = () => {
+        window.location.href = '${path}/register';
+    }
+    // 사이드바
+    document.getElementById("toggle-sidebar").addEventListener("click", function () {
+        document.body.classList.toggle("sidebar-open");
+    });
+
+    // 음성채팅 관련
     const contextPath = '<%= request.getContextPath() %>';
-    let socket = new WebSocket(`wss://${location.host}${contextPath}/signal`);
+    let socket = new WebSocket(`ws://${location.host}${contextPath}/signal`);
     let peerConnection = new RTCPeerConnection();
 
     // 웹소켓 재연결 메소드
@@ -39,7 +122,7 @@
             return; // 이미 offer가 진행 중일 때 중복 생성 방지
         }
 
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        navigator.mediaDevices.getUserMedia({audio: true})
             .then(stream => {
                 console.log("Local audio stream added:", stream);
                 stream.getAudioTracks().forEach(track => peerConnection.addTrack(track, stream));
@@ -124,14 +207,13 @@
         }
     };
 
-    $(document).ready(function(){
-        $("#test").click(function(){
+    $(document).ready(function () {
+        $("#test").click(function () {
             initializeWebSocket();
             startSignaling();
             setupPeerConnectionHandlers(peerConnection); // 피어 연결 핸들러 설정
         });
     });
 </script>
-</body>
 
 </html>
