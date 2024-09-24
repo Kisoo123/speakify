@@ -32,4 +32,7 @@ public class SecurityService {
         } while (dao.isTagExists(tag));  // DB에서 중복 체크
         return tag;
     }
+    public User findUserByUsername(String username) {
+        return dao.findByUsername(username);
+    }
 }

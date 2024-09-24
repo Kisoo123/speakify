@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Alarm">
+    <select id="findFriendRequest" parameterType="map" resultType="int">
+        SELECT user_id
+        FROM friends
+        WHERE user_id = #{toUser} AND friend_id = #{fromUser}
+           OR user_id = #{fromUser} AND friend_id = #{toUser}
+    </select>
+    <insert id="friendRequest" parameterType="map">
+        INSERT INTO friends(user_id, friend_id, status)
+        VALUES (#{fromUser},#{toUser},'PENDING')
+    </insert>
+</mapper>
