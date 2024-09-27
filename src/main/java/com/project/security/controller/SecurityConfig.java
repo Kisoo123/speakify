@@ -1,4 +1,4 @@
-package com.project.security.config;
+package com.project.security.controller;
 
 import com.project.security.service.MyUserDetailsService;
 import jakarta.servlet.DispatcherType;

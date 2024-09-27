@@ -31,7 +31,6 @@
         crossorigin="anonymous"></script>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <c:import url="${path}/WEB-INF/views/common/header.jsp"/>
-<c:out value="${loginMember}"> 안녕하세요</c:out>
 <div id="root-div">
     <%-- 사이드바 --%>
     <div id="sidebar">
@@ -55,6 +54,7 @@
     <div id="header-main-div">
 
         <div id="main-div">
+            <p><c:out value="${loginMember}"> 안녕하세요</c:out></p>
             <p>principal : <sec:authentication property="principal"/></p>
             <p>principal : <sec:authentication property="authorities"/></p>
             <h2 id="test">Click here to start voice chat</h2>
