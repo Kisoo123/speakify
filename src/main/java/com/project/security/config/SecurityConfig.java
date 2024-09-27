@@ -1,4 +1,4 @@
-package com.project.security.controller;
+package com.project.security.config;
 
 import com.project.security.service.MyUserDetailsService;
 import jakarta.servlet.DispatcherType;
@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MyUserDetailsService userDetailsService) throws Exception {
         http.authorizeHttpRequests((authz) -> authz // 최신 방식으로 변경
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/", "/search", "/register", "/login", "/login?error", "/resources/**", "/static/**", "/home").permitAll()
+                        .requestMatchers("/", "/search", "/register", "/login", "/login?error", "/resources/**", "/static/**", "/home", "/findAlarm").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .dispatcherTypeMatchers(DispatcherType.INCLUDE).permitAll()
                         .anyRequest().authenticated()
