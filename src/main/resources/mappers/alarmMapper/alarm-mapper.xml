@@ -5,12 +5,21 @@
 <mapper namespace="Alarm">
     <select id="findFriendRequest" parameterType="map" resultType="int">
         SELECT user_id
-        FROM friends
+        FROM friendRequest
         WHERE user_id = #{toUser} AND friend_id = #{fromUser}
            OR user_id = #{fromUser} AND friend_id = #{toUser}
     </select>
     <insert id="friendRequest" parameterType="map">
-        INSERT INTO friends(user_id, friend_id, status)
-        VALUES (#{fromUser},#{toUser},'PENDING')
+        INSERT INTO friendRequest(user_id, friend_id, status,alarmId)
+        VALUES (#{fromUser},#{toUser},'PENDING',${alarmId})
     </insert>
+    <insert id="insertFriendRequestAlarm" parameterType="com.project.alarm.dto.Alarm" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO alarm(toUser, type)
+        values (#{toUser},'friendRequest')
+    </insert>
+    <select id="findAlarm" parameterType="int" resultType="com.project.alarm.dto.Alarm">
+        SELECT *
+        FROM alarm
+        WHERE toUser = #{userId}
+    </select>
 </mapper>
