@@ -16,4 +16,9 @@
         WHERE channelId = #{roomNo}
         ORDER BY messageTime desc
     </select>
+    <insert id="createRoom" parameterType="map">
+        INSERT INTO channel(userId){
+
+            }
+    </insert>
 </mapper>

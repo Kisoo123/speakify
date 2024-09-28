@@ -18,7 +18,8 @@ public class ChattingService {
     public Map<String,Object> prepareRoom(Map<String,Object>params){
         Integer roomNo = dao.checkRoom(session,params);
         if(roomNo==null){
-            int result = dao.createRoom(session,params);
+            int result = dao.createRoom(session,(int)params.get("myId"));
+            result += dao.createRoom(session,(int)params.get("friendId"));
         }
         params.put("roomNo",roomNo);
         List<Message> messages = dao.checkMessage(session,params);
