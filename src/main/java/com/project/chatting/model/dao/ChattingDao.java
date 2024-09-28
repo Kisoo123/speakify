@@ -15,7 +15,13 @@ public class ChattingDao {
     public List<Message> checkMessage(SqlSessionTemplate session,Map<String,Object>params){
         return session.selectList("Chatting.checkMessage",params);
     }
-    public int createRoom(SqlSessionTemplate session, int userId) {
-        return session.insert("Chatting.createRoom",userId);
+    public int createRoom(SqlSessionTemplate session, Map<String,Object>params) {
+        return session.insert("Chatting.createRoom",params);
+    }
+    public int getNextRoomId(SqlSessionTemplate session) {
+        return session.selectOne("Chatting.getNextRoomId");
+    }
+    public void sendMessage(SqlSessionTemplate session, Message message) {
+        session.insert("Chatting.sendMessage",message);
     }
 }

@@ -16,9 +16,15 @@
         WHERE channelId = #{roomNo}
         ORDER BY messageTime desc
     </select>
+    <select id="getNextRoomId" resultType="int">
+        SELECT IFNULL((SELECT MAX(roomId) FROM channel), 0) + 1
+    </select>
     <insert id="createRoom" parameterType="map">
-        INSERT INTO channel(userId){
-
-            }
+        INSERT INTO channel (userId, roomId)
+        SELECT #{createUser}, #{nextRoomId}
+    </insert>
+    <insert id="sendMessage" parameterType="com.project.chatting.model.dto.Message" >
+        INSERT INTO message(channelId, writer, message, messageTime)
+        VALUES (#{channelId},#{writer},#{message},#{messageTime})
     </insert>
 </mapper>
