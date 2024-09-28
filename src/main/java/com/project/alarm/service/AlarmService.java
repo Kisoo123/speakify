@@ -28,19 +28,22 @@ public class AlarmService {
         params.put("toUser", toUser); //요청을 받는 유저
         params.put("fromUser", user.getId()); //요청을 보내는 유저(현재 유저)
 
-        Integer isRequestPending = dao.findFriendRequest(session,params);
+        List<Integer> isRequestPending = dao.findFriendRequest(session,params);
         //이미 요청을 보냈는지 확인, 요청을 보낸 사람의 id를 가져옴
 
-        if(isRequestPending!=null){ //확인용 변수가 null이 아니고 (요청이 이미 있으면)
-            if(isRequestPending==((Long)params.get("fromUser")).intValue()){ //보낸 사람이 받는사람이랑 같으면
+        if(isRequestPending!=null && isRequestPending.size() == 1){ //확인용 변수가 null이 아니고 (요청이 이미 있으면)
+            if(isRequestPending.get(0)==((Long)params.get("fromUser")).intValue()){ //보낸 사람이 받는사람이랑 같으면
                 return "myPending"; //myPending 스트링을 출력해 프론트단에서 이미 와 있는 요청판정
             }else {
                 return "friendPending"; // 아니면(내가 보낸 요청이 이미 있으면) 프론트에서 이미 보낸 요청판정
             }
+        }else if(isRequestPending!=null && isRequestPending.size()>1){
+            return "alreadyFriend";
         }
 
         //확인용 변수가 null이면 (요청이 없으면)
         int alarmId = dao.insertFriendRequestAlarm(session,toUser);// 우선 알람을 입력함
+        params.put("status", "PENDING");
         if(alarmId!=0){ //알람이 정상적으로 입력되면
             params.put("alarmId",alarmId); //입력한 알람 로우의 id들 맵에 넣음
         }
@@ -63,8 +66,33 @@ public class AlarmService {
         System.out.println(authentication.getPrincipal().toString());
         return (User) authentication.getPrincipal();
     }
+
     public List<Alarm> findAlarm(int userId){
         return dao.findAlarm(session,userId);
+    }
+
+    public String handleFriendRequest(int userId, String action, int alarmId){
+        User user = getCurrentUser(); // 현재 로그인된 유저의 정보
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("toUser", userId);
+        params.put("fromUser", user.getId());
+        params.put("alarmId", alarmId);
+
+        if(action.equals("accept")){ //만약 친구 요청을 수학했다면
+            dao.acceptFriendRequest(session,params); // 보낸 요청의 status를 accept로 update
+            //ACCEPTED 상태오 바꿔줄 변수
+            params.put("status", "ACCEPTED");
+            //friendRequest로 요청을 accpeted 상태로 입력
+            dao.friendRequest(session,params);
+            // 알람삭제
+            dao.deleteAlarm(session,params);
+        } else if(action.equals("reject")){// 친구 요청을 거절했다면
+            //기존에 보냈던 요청을 삭제함
+            dao.rejectFriendRequest(session,params);
+            // 알람삭제
+            dao.deleteAlarm(session,params);
+        }
+        return "success";
     }
 
 }

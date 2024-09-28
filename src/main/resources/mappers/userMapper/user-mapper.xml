@@ -4,18 +4,25 @@
 
 <mapper namespace="UserMapper">
     <select id="findByUsername" parameterType="String" resultType="com.project.security.model.dto.User">
-        SELECT * FROM users WHERE USERNAME = #{username}
+        SELECT *
+        FROM users
+        WHERE USERNAME = #{username}
     </select>
     <insert id="saveUser" parameterType="com.project.security.model.dto.User">
-        INSERT INTO users (id, username, password, role, profile_picture_url, email, display_name, status_message, uniqueTag)
-        VALUES (#{id}, #{username}, #{password}, "USER", "default-profile-img-white.png", #{email}, #{displayName}, #{statusMessage},#{uniqueTag})
+        INSERT INTO users (id, username, password, role, profile_picture_url, email, display_name, status_message,
+                           uniqueTag)
+        VALUES (#{id}, #{username}, #{password}, "USER", "default-profile-img-white.png", #{email}, #{displayName},
+                #{statusMessage}, #{uniqueTag})
     </insert>
 
     <select id="isTagExists" parameterType="String" resultType="int">
-        SELECT COUNT(*) FROM users WHERE uniqueTag= #{tag}
+        SELECT COUNT(*)
+        FROM users
+        WHERE uniqueTag = #{tag}
     </select>
     <insert id="insertDisplayNumberSequence">
-        INSERT INTO display_number_sequence_table VALUES(NULL)
+        INSERT INTO display_number_sequence_table
+        VALUES (NULL)
     </insert>
 
     <select id="getNextDisplayNumber" resultType="int">
@@ -28,5 +35,29 @@
         <if test="tagPart != null and tagPart.length() == 4">
             AND uniqueTag = #{uniqueTag}
         </if>
+    </select>
+
+    <select id="getFriendList" parameterType="int" resultType="com.project.friend.model.FriendRequest">
+        SELECT fr.id,
+               fr.user_id as userId,
+               fr.friend_id as friendId,
+               fr.status,
+               fr.created_at as createdAt,
+               usr.id as usrId,
+               usr.username,
+               usr.password,
+               usr.role,
+               usr.profile_picture_url,
+               usr.email,
+               usr.display_name,
+               usr.status_message,
+               usr.created_at,
+               usr.updated_at,
+               usr.uniquetag
+        FROM friendRequest fr
+             LEFT JOIN users usr
+                   ON fr.friend_id = usr.id
+        WHERE user_id = #{userId}
+          AND status = 'ACCEPTED'
     </select>
 </mapper>

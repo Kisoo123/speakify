@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Chatting">
+    <select id="checkRoom" resultType="int" parameterType="map">
+        SELECT roomId
+        FROM channel
+        WHERE userId in(#{myId},#{friendId})
+        GROUP BY roomId
+        HAVING COUNT(DISTINCT userId) = 2;
+    </select>
+    <select id="checkMessage" resultType="com.project.chatting.model.dto.Message" parameterType="map">
+        SELECT id,channelId,writer,message,messageTime
+        FROM message
+        WHERE channelId = #{roomNo}
+        ORDER BY messageTime desc
+    </select>
+</mapper>

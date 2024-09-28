@@ -41,4 +41,9 @@ public class UserController {
         params.put("uniqueTag", uniqueTag);
         return service.searchUsersByKeyword(params);
     }
+    @PostMapping("/getFriendList")
+    @ResponseBody
+    public List<User> getFriendList(@RequestParam int userId){
+        return service.getFriendList(userId);
+    }
 }

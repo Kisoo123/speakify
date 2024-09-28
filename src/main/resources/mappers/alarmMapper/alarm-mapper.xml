@@ -10,16 +10,47 @@
            OR user_id = #{fromUser} AND friend_id = #{toUser}
     </select>
     <insert id="friendRequest" parameterType="map">
-        INSERT INTO friendRequest(user_id, friend_id, status,alarmId)
-        VALUES (#{fromUser},#{toUser},'PENDING',${alarmId})
+        INSERT INTO friendRequest(user_id, friend_id, status, alarmId)
+        VALUES (#{fromUser}, #{toUser}, #{status}, #{alarmId})
     </insert>
-    <insert id="insertFriendRequestAlarm" parameterType="com.project.alarm.dto.Alarm" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insertFriendRequestAlarm" parameterType="com.project.alarm.dto.Alarm" useGeneratedKeys="true"
+            keyProperty="id">
         INSERT INTO alarm(toUser, type)
-        values (#{toUser},'friendRequest')
+        values (#{toUser}, 'friendRequest')
     </insert>
     <select id="findAlarm" parameterType="int" resultType="com.project.alarm.dto.Alarm">
-        SELECT *
-        FROM alarm
-        WHERE toUser = #{userId}
+        SELECT a.toUser,
+               a.createAt,
+               a.id,
+               a.type,
+               a.createAt,
+               fr.alarmId   AS friendRequestId,
+               fr.user_id   AS userId,
+               fr.friend_id AS friendId,
+               fr.status,
+               usr.id       as usrId,
+               usr.display_name
+        FROM alarm a
+                 LEFT JOIN friendRequest fr ON a.id = fr.alarmId
+                 LEFT JOIN users usr ON fr.user_id = usr.id
+        WHERE a.toUser = #{userId}
+          AND (a.type = 'friendRequest' OR fr.alarmId IS NULL)
     </select>
+
+    <update id="acceptFriendRequest" parameterType="map">
+        UPDATE friendRequest
+        SET status = 'ACCEPTED'
+        WHERE user_id = #{toUser} AND friend_id=#{fromUser}
+    </update>
+    <delete id="rejectFriendRequest" parameterType="map">
+        DELETE
+        FROM friendRequest
+        WHERE user_id = #{toUser}
+          AND friend_id = #{fromUser}
+    </delete>
+    <delete id="deleteAlarm" parameterType="map">
+        DELETE
+        FROM alarm
+        WHERE id=#{alarmId}
+    </delete>
 </mapper>

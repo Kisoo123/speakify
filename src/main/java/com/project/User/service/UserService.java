@@ -19,4 +19,7 @@ public class UserService {
     public List<User> searchUsersByKeyword(Map<String,Object> params){
         return dao.searchUsersByKeyword(params,session);
     }
+    public List<User> getFriendList(int userId){
+        return dao.getFriendList(session,userId);
+    }
 }
