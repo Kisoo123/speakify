@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MyUserDetailsService userDetailsService) throws Exception {
         http.authorizeHttpRequests((authz) -> authz // 최신 방식으로 변경
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/", "/search", "/register", "/login", "/login?error", "/resources/**", "/static/**", "/home", "/findAlarm").permitAll()
+                        .requestMatchers("/", "/search", "/register", "/login", "/login?error", "/resources/**", "/static/**", "/home", "/findAlarm","/getFriendList").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .dispatcherTypeMatchers(DispatcherType.INCLUDE).permitAll()
                         .anyRequest().authenticated()

@@ -21,4 +21,8 @@ public class AlarmController {
     public ResponseEntity<?> findAlarm(@RequestParam int userId) {
         return ResponseEntity.ok(service.findAlarm(userId));
     }
+    @PostMapping("/handleFriendRequest")
+    public ResponseEntity<?> handleFriendRequest(@RequestParam int userId,@RequestParam String action,@RequestParam int alarmId) {
+        return ResponseEntity.ok(service.handleFriendRequest(userId,action,alarmId));
+    }
 }

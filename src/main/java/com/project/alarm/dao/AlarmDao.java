@@ -12,8 +12,8 @@ public class AlarmDao {
     public int friendRequest(SqlSessionTemplate session, Map<String,Object> params){
         return session.insert("Alarm.friendRequest", params);
     }
-    public Integer findFriendRequest(SqlSessionTemplate session, Map<String,Object> param){
-        return session.selectOne("Alarm.findFriendRequest", param);
+    public List<Integer> findFriendRequest(SqlSessionTemplate session, Map<String,Object> param){
+        return session.selectList("Alarm.findFriendRequest", param);
     }
     public int insertFriendRequestAlarm(SqlSessionTemplate session, int toUser){
         System.out.println(toUser + "테스트용 dao");
@@ -21,9 +21,20 @@ public class AlarmDao {
         alarm.setToUser(Long.valueOf(toUser));
         session.insert("Alarm.insertFriendRequestAlarm", alarm);
 
-       return alarm.getId().intValue();
+       return alarm.getId();
     }
     public List<Alarm> findAlarm(SqlSessionTemplate session, int userId){
-        return session.selectList("Alarm.findAlarm", userId);
+        List<Alarm> test = session.selectList("Alarm.findAlarm", userId);
+        System.out.println(test.toString());
+        return test;
+    }
+    public void acceptFriendRequest(SqlSessionTemplate session, Map<String, Object> params){
+        session.update("Alarm.acceptFriendRequest", params);
+    }
+    public void rejectFriendRequest(SqlSessionTemplate session, Map<String, Object> params){
+        session.delete("Alarm.rejectFriendRequest", params);
+    }
+    public void deleteAlarm(SqlSessionTemplate session, Map<String, Object> params){
+        session.delete("Alarm.deleteAlarm", params);
     }
 }

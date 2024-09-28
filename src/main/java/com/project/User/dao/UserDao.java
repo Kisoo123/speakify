@@ -14,4 +14,7 @@ public class UserDao {
 
         return session.selectList("searchUsersByKeyword",params);
     }
+    public List<User> getFriendList(SqlSessionTemplate session,int userId){
+        return session.selectList("getFriendList",userId);
+    }
 }
