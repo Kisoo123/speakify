@@ -467,13 +467,13 @@
                         response.forEach(friend => {
                             console.log(friend);
                             friendListHtml += `
-                                <div class="friend-item dropdown" id="friend-\${friend.id}">
-                                <p class="dropdown-toggle" id="dropdownMenuButton\${friend.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="friend-item dropdown" id="friend-\${friend.usrId}">
+                                <p class="dropdown-toggle" id="dropdownMenuButton\${friend.usrId}" data-bs-toggle="dropdown" aria-expanded="false">
                                 \${friend.display_name} (\${friend.statusMessage || ''})
                         </p>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton\${friend.id}">
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton\${friend.usrId}">
                                 <li><a class="dropdown-item" href="#" onclick="viewProfile(\${friend.id})">프로필 보기</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="startCall(\${friend.id},'\${friend.display_name}')">통화하기</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="startCall(\${friend.usrId},'\${friend.display_name}')">통화하기</a></li>
                             </ul>
                         </div>
                             `;
@@ -502,6 +502,7 @@
         // 통화하기 함수
             var roomNo = null;
         function startCall(friendId,displayName) {
+            console.log('친구아이디'+friendId);
             // 기존 채팅방이 있을 경우 제거
             $('#chat-room').remove();
             // 새로운 채팅방 div 추가
@@ -530,8 +531,19 @@
                     myId : ${loginMember.id}
                 },
                 success:function(response){
-                    console.log(response);
-                    roomNo = response.roomNo;
+                    let roomNo = response.roomNo;
+                    let messages = response.messages;
+                    // 받은 메시지를 #messages div에 추가
+                    messages.forEach(msg => {
+                        let messageHtml = `
+                            <div class="message-item">
+                                <strong>\${msg.writer === response.myId ? '나' : '상대방'}: </strong>
+                                <span>\${msg.message}</span>
+                                <small class="text-muted">\${new Date(msg.messageTime).toLocaleTimeString()}</small>
+                            </div>
+                        `;
+                        $("#messages").append(messageHtml);
+                    });
                 }
             });
 
@@ -552,6 +564,7 @@
         // 메시지 보내기 함수
         function sendMessage(friendId) {
             const message = $('#messageInput').val();
+            console.log(roomNo);
             if (message.trim() === '') {
                 alert('메시지를 입력하세요.');
                 return;
@@ -562,12 +575,13 @@
             $.ajax({
                 type:"POST",
                 url:"/sendMessage",
-                data:{
-                    roomNo : roomNo,
-                    writer : '\${loginMember.id}',
+                contentType: "application/json",
+                data:JSON.stringify({
+                    channelId : roomNo,
+                    writer : ${loginMember.id},
                     message : message,
                     messageTime : new Date().getTime()
-                },
+                }),
                 success:function (response){
                     console.log(response);
                 }
