@@ -473,7 +473,7 @@
                         </p>
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton\${friend.id}">
                                 <li><a class="dropdown-item" href="#" onclick="viewProfile(\${friend.id})">프로필 보기</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="startCall(\${friend})">통화하기</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="startCall(\${friend.id},'\${friend.display_name}')">통화하기</a></li>
                             </ul>
                         </div>
                             `;
@@ -501,13 +501,13 @@
 
         // 통화하기 함수
             var roomNo = null;
-        function startCall(friend) {
+        function startCall(friendId,displayName) {
             // 기존 채팅방이 있을 경우 제거
             $('#chat-room').remove();
             // 새로운 채팅방 div 추가
             let chatRoomHtml = `
         <div id="chat-room" class="chat-room">
-            <h3>\${friend.display_name}와의 통화 및 채팅</h3>
+            <h3>\${displayName}와의 통화 및 채팅</h3>
             <div class="chat-controls">
                 <button class="btn btn-danger" onclick="endCall()">통화 종료</button>
             </div>
@@ -517,7 +517,7 @@
                 </div>
                 <div class="chat-input">
                     <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
-                    <button class="btn btn-primary" onclick="sendMessage(\${friend.id})">보내기</button>
+                    <button class="btn btn-primary" onclick="sendMessage(\${friendId})">보내기</button>
                 </div>
             </div>
         </div>
@@ -527,7 +527,7 @@
                 url:"/startCall",
                 data:{
                     friendId : friendId,
-                    myId : '\${loginMember.id}'
+                    myId : ${loginMember.id}
                 },
                 success:function(response){
                     console.log(response);
