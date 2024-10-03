@@ -32,7 +32,8 @@
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<c:import url="${pageContext.request.contextPath}/WEB-INF/views/common/header.jsp"/>
+<jsp:include page="${path}/WEB-INF/views/common/header.jsp"/>
+
 <div id="root-div">
     <%-- 사이드바 --%>
     <div id="sidebar">
