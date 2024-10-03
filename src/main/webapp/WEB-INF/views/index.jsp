@@ -136,7 +136,7 @@
         // 유저의 ID, 서버에서 이 값을 통해 해당 유저의 알림을 구독
 
         // SockJS를 이용해 WebSocket 연결을 설정
-        const Stompsocket = new SockJS('http://' + window.location.host + '/ws'); // 서버의 WebSocket 엔드포인트
+        const Stompsocket = new SockJS('http://' + window.location.host + '/wss'); // 서버의 WebSocket 엔드포인트
         const stompClient = Stomp.over(Stompsocket);
 
         // 연결을 성공하면 구독을 설정
