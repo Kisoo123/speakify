@@ -18,8 +18,10 @@
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://cdn.jsdelivr.net/sockjs/1.0.2/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="${path}/css/index.css?ver=<%= System.currentTimeMillis() %>">
     <link rel="stylesheet" type="text/css" href="${path}/css/header.css?ver=<%= System.currentTimeMillis()%>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -39,9 +41,8 @@
                 <img class="sidebar-icons" id="showFriends" src="${path}/images/icon/user-icon-white.png">
                 <img class="sidebar-icons" src="${path}/images/icon/users-icon-white.png">
                 <img class="sidebar-icons" id="toggle-search" src="${path}/images/icon/search-icon-white.png">
-                <svg class="sidebar-icons-bell" id="alarm" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                     fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                <svg class="sidebar-icons-bell bi bi-bell" id="alarm" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"  viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"></path>
                 </svg>
             </div>
         </div>
@@ -531,7 +532,8 @@
                     myId : ${loginMember.id}
                 },
                 success:function(response){
-                    let roomNo = response.roomNo;
+                    console.log(response.roomNo+"방번호");
+                    roomNo = response.roomNo;
                     let messages = response.messages;
                     // 받은 메시지를 #messages div에 추가
                     messages.forEach(msg => {
@@ -544,6 +546,23 @@
                         `;
                         $("#messages").append(messageHtml);
                     });
+                        stompClient.subscribe('/topic/room/' + roomNo, function (message) {
+                            let loginMemberId = ${loginMember.id};
+                            let parsedMessage = JSON.parse(message.body);
+
+                            console.log('sub수신');
+                            console.log(message);
+                            let messageHtmlLive = `
+                            <div class="message-item">
+                                <strong>\${parsedMessage.writer === loginMemberId ? '나' : '상대방'}: </strong>
+                                <span>\${parsedMessage.message}</span>
+                                <small class="text-muted">\${new Date(parsedMessage.messageTime).toLocaleTimeString()}</small>
+                            </div>
+                        `;
+                            $("#messages").append(messageHtmlLive);
+                        });
+                },error:function(error){
+                    console.log(error);
                 }
             });
 
@@ -564,7 +583,6 @@
         // 메시지 보내기 함수
         function sendMessage(friendId) {
             const message = $('#messageInput').val();
-            console.log(roomNo);
             if (message.trim() === '') {
                 alert('메시지를 입력하세요.');
                 return;
@@ -572,6 +590,7 @@
 
             // 메시지를 서버로 전송하는 로직 (추후 서버 연동 필요)
             console.log('메시지 전송:', message, '대상:', friendId);
+            console.log('방번호'+roomNo);
             $.ajax({
                 type:"POST",
                 url:"/sendMessage",
