@@ -18,6 +18,6 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS(); // WebSocket 엔드포인트
+        registry.addEndpoint("/wss").withSockJS(); // WebSocket 엔드포인트
     }
 }
