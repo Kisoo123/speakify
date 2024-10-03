@@ -31,7 +31,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <div id="root-div">
     <%-- 사이드바 --%>
@@ -153,14 +153,14 @@
 
 
         // 음성채팅 관련
-        let socket = new WebSocket('ws://' + window.location.host + '/signal');
+        let socket = new WebSocket('wss://' + window.location.host + '/signal');
         let peerConnection = new RTCPeerConnection();
 
         // 웹소켓 재연결 메소드
         function initializeWebSocket() {
             if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
                 console.log("WebSocket is closed. Reconnecting...");
-                socket = new WebSocket('ws://' + window.location.host + '/signal');
+                socket = new WebSocket('wss://' + window.location.host + '/signal');
             }
         }
 
