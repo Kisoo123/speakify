@@ -136,7 +136,7 @@
         // 유저의 ID, 서버에서 이 값을 통해 해당 유저의 알림을 구독
 
         // SockJS를 이용해 WebSocket 연결을 설정
-        const Stompsocket = new SockJS('https://' + window.location.host + '/wss'); // 서버의 WebSocket 엔드포인트
+        const Stompsocket = new SockJS('https://' + window.location.host +'${path}'+ '/wss'); // 서버의 WebSocket 엔드포인트
         const stompClient = Stomp.over(Stompsocket);
 
         // 연결을 성공하면 구독을 설정
@@ -153,14 +153,14 @@
 
 
         // 음성채팅 관련
-        let socket = new WebSocket('wss://' + window.location.host + '/signal');
+        let socket = new WebSocket('wss://' + window.location.host + '${path}'+'/signal');
         let peerConnection = new RTCPeerConnection();
 
         // 웹소켓 재연결 메소드
         function initializeWebSocket() {
             if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
                 console.log("WebSocket is closed. Reconnecting...");
-                socket = new WebSocket('wss://' + window.location.host + '/signal');
+                socket = new WebSocket('wss://' + window.location.host + '${path}'+'/signal');
             }
         }
 
