@@ -12,4 +12,11 @@
 
 #header-div {
     background-color: #000000;
+    display: flex;
+    justify-content: space-between;
+}
+.bi-person {
+    font-size:145%;
+    color:white;
+    margin-right: 1%;
 }
