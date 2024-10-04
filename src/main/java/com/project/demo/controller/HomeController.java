@@ -27,7 +27,7 @@ public class HomeController {
 
     @GetMapping("/aws")
     public ResponseEntity<String> aws() {
-        return new ResponseEntity<>("200ok", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
