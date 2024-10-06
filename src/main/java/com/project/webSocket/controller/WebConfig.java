@@ -12,12 +12,13 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // 허용할 출처를 명시
+                .allowedOrigins("https://speakify.live") // 허용할 출처를 명시
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .exposedHeaders("Authorization", "Authorization-Refresh"); // Expose headers 추가
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 캐시를 비활성화하고 싶은 정적 리소스 경로를 지정
