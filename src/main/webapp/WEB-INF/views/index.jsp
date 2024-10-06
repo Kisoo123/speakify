@@ -607,7 +607,6 @@
             })
 
             // 전송한 메시지를 채팅창에 추가
-            $('#messages').append(`<div class="sent-message"><strong>나: </strong>\${message}</div>`);
             $('#messageInput').val(''); // 입력창 비우기
 
         }
