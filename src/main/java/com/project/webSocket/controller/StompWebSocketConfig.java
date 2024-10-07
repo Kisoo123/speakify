@@ -18,8 +18,8 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/wss")
-                .setAllowedOrigins("https://speakify.live")
+        registry.addEndpoint("/wss","/ws")
+                .setAllowedOrigins("https://speakify.live", "http://localhost:8080")
                 .withSockJS(); // WebSocket 엔드포인트
     }
 }
