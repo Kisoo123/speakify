@@ -19,7 +19,7 @@ public class SecurityService {
         dao.insertDisplayNumberSequence();
         int displayNumber = dao.getNextDisplayNumber();
         String displayName = "사용자" + displayNumber;
-        user.setDisplay_name(displayName);
+        user.setDisplayName(displayName);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setUniqueTag(generateUniqueTag());
         dao.saveUser(user);

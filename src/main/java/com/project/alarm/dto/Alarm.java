@@ -27,6 +27,6 @@ public class Alarm {
 
     // user 테이블에서 가져올 필드
     private Long usrId;                 // 사용자 ID (고유값)
-    private String display_name;       // 닉네임 또는 표시 이름
+    private String displayName;       // 닉네임 또는 표시 이름
 
 }

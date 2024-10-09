@@ -21,7 +21,7 @@ public class User implements UserDetails{
     private String role;              // 권한 (예: USER, ADMIN)
     private String profilePictureUrl; // 프로필 사진 URL
     private String email;             // 이메일 주소
-    private String display_name;       // 닉네임 또는 표시 이름
+    private String displayName;       // 닉네임 또는 표시 이름
     private String statusMessage;     // 상태 메시지 (예: "온라인", "통화중" 등)
     private String uniqueTag; // 유저식별코드
 
