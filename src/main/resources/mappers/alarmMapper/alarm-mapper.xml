@@ -29,7 +29,7 @@
                fr.friend_id AS friendId,
                fr.status,
                usr.id       as usrId,
-               usr.display_name
+               usr.displayName
         FROM alarm a
                  LEFT JOIN friendRequest fr ON a.id = fr.alarmId
                  LEFT JOIN users usr ON fr.user_id = usr.id
