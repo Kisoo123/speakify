@@ -9,7 +9,7 @@
         WHERE USERNAME = #{username}
     </select>
     <insert id="saveUser" parameterType="com.project.security.model.dto.User">
-        INSERT INTO users (id, username, password, role, profile_picture_url, email, display_name, status_message,
+        INSERT INTO users (id, username, password, role, profilePictueUrl, email, display_name, status_message,
                            uniqueTag)
         VALUES (#{id}, #{username}, #{password}, "USER", "default-profile-img-white.png", #{email}, #{displayName},
                 #{statusMessage}, #{uniqueTag})
@@ -47,7 +47,7 @@
                usr.username,
                usr.password,
                usr.role,
-               usr.profile_picture_url,
+               usr.profilePictureUrl,
                usr.email,
                usr.displayName,
                usr.status_message,

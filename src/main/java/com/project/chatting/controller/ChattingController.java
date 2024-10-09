@@ -4,6 +4,7 @@ import com.project.chatting.model.dto.Message;
 import com.project.chatting.model.dto.SignalMessage;
 import com.project.chatting.service.ChattingService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +37,7 @@ public class ChattingController {
     }
     @PostMapping("/sendMessage")
     public ResponseEntity<?> sendMessage(@RequestBody Message message) {
-        System.out.println(message.toString()+"메시지 테스트");
+        message.setMessage(StringEscapeUtils.escapeHtml4(message.getMessage()));
         service.sendMessage(message);
         simpMessagingTemplate.convertAndSend("/topic/room/"+message.getChannelId(),message);
         return null;

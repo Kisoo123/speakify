@@ -56,13 +56,7 @@
     <div id="header-main-div">
 
         <div id="main-div">
-            <p><c:out value="${loginMember}"> </c:out></p>
-            <p><c:out value="${loginMember != 'anonymousUser'}"> </c:out></p>
 
-            <p>principal : <sec:authentication property="principal"/></p>
-            <p>principal : <sec:authentication property="authorities"/></p>
-            <h2 id="test">Click here to start voice chat</h2>
-            <a href="/login">dasdsa</a>
         </div>
         <!-- Toast 경고창 (숨겨져 있다가 JavaScript로 보여줍니다) -->
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
@@ -585,10 +579,10 @@ function handleAnswer(answer) {
                 <button class="btn btn-danger" onclick="endCall()">통화 종료</button>
             </div>
             <div class="chat-box">
-                <div id="messages" class="messages" style="height: 65vh;">
+                <div id="messages" class="messages">
                     <!-- 여기에 채팅 메시지가 추가됩니다. -->
                 </div>
-                <div class="chat-input">
+                <div class="chat-input" style="display: flex">
                     <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
                     <button class="btn btn-primary" onclick="sendMessage(\${friendId})">보내기</button>
                 </div>
@@ -642,6 +636,7 @@ function handleAnswer(answer) {
             });
 
             // #header-main-div 안에 채팅방 추가
+            $('#header-main-div').empty();
             $('#header-main-div').append(chatRoomHtml);
 
             // 통화 시작 로직을 여기에 추가

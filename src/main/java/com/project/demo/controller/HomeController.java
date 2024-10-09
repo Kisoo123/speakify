@@ -16,10 +16,6 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "security/login";
-    }
     @GetMapping("/register")
     public String register() {
         return "security/register";

@@ -17,7 +17,9 @@
     height: 4vh;
 }
 .bi-person {
-    font-size:145%;
+    font-size:2rem;
     color:white;
+}
+.dropdown{
     margin-right: 1%;
 }
