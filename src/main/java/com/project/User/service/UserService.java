@@ -16,10 +16,6 @@ public class UserService {
     private final UserDao dao;
     private final SqlSessionTemplate session;
 
-    public void updateUserProfile(User user) {
-        dao.updateUserProfile(user,session);
-    }
-
     public List<User> searchUsersByKeyword(Map<String,Object> params){
         return dao.searchUsersByKeyword(params,session);
     }

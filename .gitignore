@@ -39,3 +39,5 @@ build/
 
 ### EC2 ###
 deepen.pem
+
+application.properties
