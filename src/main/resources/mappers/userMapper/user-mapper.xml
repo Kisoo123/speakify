@@ -9,7 +9,7 @@
         WHERE USERNAME = #{username}
     </select>
     <insert id="saveUser" parameterType="com.project.security.model.dto.User">
-        INSERT INTO users (id, username, password, role, profilePictueUrl, email, display_name, status_message,
+        INSERT INTO users (id, username, password, role, profilePictueUrl, email, displayName, statusMessage,
                            uniqueTag)
         VALUES (#{id}, #{username}, #{password}, "USER", "default-profile-img-white.png", #{email}, #{displayName},
                 #{statusMessage}, #{uniqueTag})
@@ -50,7 +50,7 @@
                usr.profilePictureUrl,
                usr.email,
                usr.displayName,
-               usr.status_message,
+               usr.statusMessage,
                usr.created_at,
                usr.updated_at,
                usr.uniquetag
@@ -60,4 +60,20 @@
         WHERE user_id = #{userId}
           AND status = 'ACCEPTED'
     </select>
+    <update id="updateUserProfile" parameterType="com.project.security.model.dto.User">
+        UPDATE users
+        <set>
+            <if test="profilePictureUrl != null">
+                profilePictureUrl = #{profilePictureUrl},
+            </if>
+            <if test="displayName != null">
+                displayName = #{displayName},
+            </if>
+            <if test="statusMessage != null">
+                statusMessage = #{statusMessage},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
 </mapper>
