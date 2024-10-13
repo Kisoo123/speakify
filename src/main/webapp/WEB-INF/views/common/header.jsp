@@ -11,6 +11,8 @@
         <div class="profile" id="profileContainer">
             <div id="profile-data">
                 <div id="profile-displayName">
+
+
                     <c:out value="${loginMember.displayName}"></c:out>
                 </div>
                 <div id="profile-uniqueTag">
