@@ -7,7 +7,7 @@
     border: none;
     margin: 0;
     width: 96px;
-    margin-left: 65px;
+    margin-left: 2.6vw;
 }
 
 #header-div {
@@ -22,4 +22,33 @@
 }
 .dropdown{
     margin-right: 1%;
+}
+#profileDropdown{
+    height: 4vh;
+    display: flex;
+    align-items: center;
+    margin-right: 1vw;
+}
+#profileBt{
+    height:70%;
+    border-color: white;
+    border-style: solid;
+    border-width: 2px;
+}
+#profileContainer{
+    display: flex;
+}
+#profile-data{
+    width:4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#profile-displayName{
+    font-size:1rem;
+    color:white;
+}
+#profile-uniqueTag{
+    color:#a5a5a5;
+    font-size:0.8rem;
 }

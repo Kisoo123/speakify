@@ -1022,12 +1022,12 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </schema>
     <schema id="289" parent="1" name="msql">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2024-10-07.17:00:02</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-10-09.18:26:08</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="290" parent="1" name="mysql">
       <Grants>user|||mysql.session|localhost|SELECT|G</Grants>
-      <LastIntrospectionLocalTimestamp>2024-10-07.17:00:10</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-10-09.18:26:17</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="291" parent="1" name="performance_schema">
@@ -1763,7 +1763,7 @@ stats_persistent
       <SourceTextLength>565</SourceTextLength>
     </view>
     <column id="413" parent="298" name="id">
-      <AutoIncrement>19</AutoIncrement>
+      <AutoIncrement>20</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
@@ -1811,7 +1811,7 @@ stats_persistent
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="422" parent="299" name="id">
-      <AutoIncrement>19</AutoIncrement>
+      <AutoIncrement>21</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1916,7 +1916,7 @@ stats_persistent
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="444" parent="302" name="id">
-      <AutoIncrement>40</AutoIncrement>
+      <AutoIncrement>42</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -1981,7 +1981,7 @@ stats_persistent
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="458" parent="303" name="id">
-      <AutoIncrement>66</AutoIncrement>
+      <AutoIncrement>91</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
@@ -2055,7 +2055,7 @@ stats_persistent
       <Position>4</Position>
       <StoredType>varchar(20)|0s</StoredType>
     </column>
-    <column id="473" parent="304" name="profile_picture_url">
+    <column id="473" parent="304" name="profilePictureUrl">
       <Position>5</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
@@ -2068,9 +2068,9 @@ stats_persistent
       <Position>7</Position>
       <StoredType>varchar(100)|0s</StoredType>
     </column>
-    <column id="476" parent="304" name="status_message">
+    <column id="476" parent="304" name="statusMessage">
       <Position>8</Position>
-      <StoredType>varchar(100)|0s</StoredType>
+      <StoredType>varchar(500)|0s</StoredType>
     </column>
     <column id="477" parent="304" name="created_at">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
