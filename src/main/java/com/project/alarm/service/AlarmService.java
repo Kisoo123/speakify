@@ -61,7 +61,7 @@ public class AlarmService {
         messagingTemplate.convertAndSend("/topic/user/" + friendId , userId);
     }
 
-    private User getCurrentUser() {
+    public static User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication.getPrincipal().toString());
         return (User) authentication.getPrincipal();
