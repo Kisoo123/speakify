@@ -17,4 +17,8 @@ public class UserDao {
     public List<User> getFriendList(SqlSessionTemplate session,int userId){
         return session.selectList("getFriendList",userId);
     }
+
+    public void updateUserProfile(User user, SqlSessionTemplate session) {
+        session.update("updateUserProfile",user);
+    }
 }
