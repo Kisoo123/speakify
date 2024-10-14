@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=utf-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
 
 <sec:authentication var="loginMember" property="principal"/>
 
@@ -70,7 +71,7 @@
                             <c:out value="${loginMember}"></c:out>
                         </div>
                         <div class="card-body">
-                            <form action="/updateProfile" method="post" enctype="multipart/form-data">
+                            <form action="\${path}/updateProfile" method="post" enctype="multipart/form-data">
                                 <!-- 프로필 사진 영역 -->
                                 <div class="mb-3 text-center">
                                     <img id="profileImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/${loginMember.id}${loginMember.profilePictureUrl}" alt="Profile Picture" class="rounded-circle" width="150" height="150" style="background-color:grey;">
