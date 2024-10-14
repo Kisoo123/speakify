@@ -9,7 +9,6 @@
 
     <c:if test="${loginMember!='anonymousUser'}">
         <div class="profile" id="profileContainer">
-
             <div id="profile-data">
                 <div id="profile-displayName">
                     <c:out value="${loginMember.displayName}"></c:out>
