@@ -514,7 +514,7 @@ function handleAnswer(answer) {
             $("#search-input").hide();
             $.ajax({
                 type: 'POST', // 서버에 GET 요청을 보냄
-                url: '${path}/getFriendList', // 서버의 친구 목록을 불러오는 URL
+                url: '/getFriendList', // 서버의 친구 목록을 불러오는 URL
                 data: {
                     'userId': '${loginMember.id}' // 로그인된 유저 ID 전송
                 },
