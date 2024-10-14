@@ -13,6 +13,7 @@
                 <div id="profile-displayName">
                     <c:out value="${loginMember.displayName}"></c:out>
                 </div>
+
                 <div id="profile-uniqueTag">
                     <c:out value="#${loginMember.uniqueTag}"></c:out>
                 </div>
