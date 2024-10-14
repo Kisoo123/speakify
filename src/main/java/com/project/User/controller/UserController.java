@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,8 +27,6 @@ import static com.project.alarm.service.AlarmService.getCurrentUser;
 @RequiredArgsConstructor
 @Controller
 public class UserController {
-    @Value("${profile.picture.upload.dir}")
-    private String uploadDir;
 
     private final ServletContext servletContext;
     private final UserService service;
