@@ -68,12 +68,12 @@ public class UserController {
             @RequestParam(value = "statusMessage", required = false) String statusMessage,
             HttpServletRequest request) {
         User user = getCurrentUser();
-
-        if (profilePicture != null) {
-            user.setProfilePictureUrl(s3Service.uploadFile(profilePicture));
-        }
-        user.setDisplayName(displayName);
-        user.setStatusMessage(statusMessage);
+        System.out.println("테스트용"+"profilePicture"+profilePicture+"displayName"+displayName+"statusMessage"+statusMessage);
+        System.out.println("user.getDisplayName()"+user.getDisplayName());
+        System.out.println("displayName"+displayName);
+        if (!profilePicture.isEmpty())user.setProfilePictureUrl(user.getId()+s3Service.uploadFile(profilePicture));
+        if(!displayName.isEmpty())user.setDisplayName(displayName);
+        if(!statusMessage.isEmpty())user.setStatusMessage(statusMessage);
 
         // 사용자 정보 업데이트
         service.updateUserProfile(user);

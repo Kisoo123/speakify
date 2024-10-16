@@ -532,8 +532,8 @@ function handleAnswer(answer) {
                             console.log(friend);
                             friendListHtml += `
                                 <div class="friend-item dropdown" id="friend-\${friend.usrId}">
-                                <p class="dropdown-toggle" id="dropdownMenuButton\${friend.usrId}" data-bs-toggle="dropdown" aria-expanded="false">
-                                \${friend.displayName} (\${friend.statusMessage || ''})
+                                <img id="friendProfileImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/\${friend.profilePictureUrl}" alt="Profile Picture" class="rounded-circle" style="background-color:grey;">                                <p class="dropdown-toggle" id="dropdownMenuButton\${friend.usrId}" data-bs-toggle="dropdown" aria-expanded="false">
+                                \${friend.displayName} \${friend.statusMessage || ''}
                         </p>
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton\${friend.usrId}">
                                 <li><a class="dropdown-item" href="#" onclick="viewProfile(\${friend.id})">프로필 보기</a></li>
@@ -575,9 +575,11 @@ function handleAnswer(answer) {
             <h3>\${displayName}와의 통화 및 채팅</h3>
             <div class="chat-controls">
             <button class="btn btn-success" id="start-call-button">통화 시작</button>
+            <button class="btn btn-danger" onclick="endCall()">통화 종료</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" id="volumeControl">
 
-                <button class="btn btn-danger" onclick="endCall()">통화 종료</button>
             </div>
+
             <div class="chat-box">
                 <div id="messages" class="messages">
                     <!-- 여기에 채팅 메시지가 추가됩니다. -->
@@ -646,6 +648,7 @@ function handleAnswer(answer) {
         // 통화 종료 함수
         function endCall() {
             // 통화 종료 처리 및 채팅방 제거
+            peerConnection.close();
             $('#chat-room').remove();
             alert('통화가 종료되었습니다.');
         }

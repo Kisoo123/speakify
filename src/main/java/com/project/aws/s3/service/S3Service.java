@@ -9,6 +9,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.project.alarm.service.AlarmService.getCurrentUser;
 @Service
@@ -31,7 +32,10 @@ public class S3Service {
         User user = getCurrentUser();
         String userId = user.getId().toString();
         String fileName = "uploads/public/profile/" + userId + file.getOriginalFilename();
-        String oldFileName = "uploads/public/profile/" + userId + user.getProfilePictureUrl();
+        String oldFileName = "uploads/public/profile/" + user.getProfilePictureUrl();
+        if(Objects.equals(file.getOriginalFilename(), "default-profile-img-white.png")){
+            return file.getOriginalFilename();
+        }
         try {
             HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                     .bucket(bucket) // S3 버킷 이름

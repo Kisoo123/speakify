@@ -21,7 +21,7 @@
             </div>
             <div class="dropdown" id="profileDropdown">
                  <img id="profileBt"
-                 src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/${loginMember.id}${loginMember.profilePictureUrl}"
+                 src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/${loginMember.profilePictureUrl}"
                  alt="Profile Picture"
                  class="rounded-circle"
                  style="background-color:grey;"
@@ -42,11 +42,13 @@
 </header>
 <c:if test="${loginMember!='anonymousUser'}">
     <script>
-
+   (function(){
+      var ef = function(){};
+      window.console = window.console || {log:ef,warn:ef,error:ef,dir:ef};
+    }());
         $(document).ready(function () {
             // 동적으로 추가된 input 요소에 대해 이벤트 위임 사용
             $(document).on('change', '#profilePicture', function (event) {
-                console.log('파일 선택됨'); // 콘솔 로그로 확인
                 const file = event.target.files[0];
 
                 if (file) {
@@ -74,7 +76,7 @@
                             <form action="/updateProfile" method="post" enctype="multipart/form-data">
                                 <!-- 프로필 사진 영역 -->
                                 <div class="mb-3 text-center">
-                                    <img id="profileImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/${loginMember.id}${loginMember.profilePictureUrl}" alt="Profile Picture" class="rounded-circle" width="150" height="150" style="background-color:grey;">
+                                    <img id="profileImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/${loginMember.profilePictureUrl}" alt="Profile Picture" class="rounded-circle" width="150" height="150" style="background-color:grey;">
                                 </div>
                                 <div style="display:flex; align-items:center; flex-direction:column">
                                     <!-- 프로필 사진 변경 -->

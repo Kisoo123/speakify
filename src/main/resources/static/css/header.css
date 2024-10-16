@@ -29,7 +29,17 @@
     align-items: center;
     margin-right: 1vw;
 }
+#profilePicture {
+    width: 29vw;
+}
+#displayName {
+    width: 29vw;
+}
+#statusMessage{
+    width: 29vw;
+}
 #profileBt{
+    aspect-ratio: 1 / 1;
     height:70%;
     border-color: white;
     border-style: solid;

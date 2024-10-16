@@ -114,3 +114,12 @@ body {
     text-decoration-color: black !important;
     color: black !important;
 }
+#friendProfileImage{
+    width: 20%;
+    aspect-ratio: 1 / 1;
+}
+.friend-item{
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1.2vh;
+}
