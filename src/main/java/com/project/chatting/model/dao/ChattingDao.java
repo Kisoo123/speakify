@@ -1,5 +1,6 @@
 package com.project.chatting.model.dao;
 
+import com.project.chatting.model.dto.Channel;
 import com.project.chatting.model.dto.Message;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,5 +24,8 @@ public class ChattingDao {
     }
     public void sendMessage(SqlSessionTemplate session, Message message) {
         session.insert("Chatting.sendMessage",message);
+    }
+    public List<Channel>getChannelList(SqlSessionTemplate session,String userId) {
+        return session.selectOne("Chatting.getChannelList",userId);
     }
 }

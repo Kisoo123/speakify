@@ -92,7 +92,7 @@ body {
 
 }
 #search-result{
-    width: 90%;
+    width: 100%;
 }
 #messages{
     overflow-y: scroll;
@@ -116,10 +116,36 @@ body {
 }
 #friendProfileImage{
     width: 20%;
+    height: 20%;
     aspect-ratio: 1 / 1;
 }
 .friend-item{
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 1.2vh;
+}
+#profile-status{
+    display: flex;
+    flex-direction: column;
+}
+p{
+    margin-bottom:0px!important;
+}
+#profile-statusMessage{
+    font-size: 0.7rem;
+}
+.dropdown-toggle::after {
+    display: none !important; /* 모든 드롭다운에서 화살표 제거 */
+}
+#addChannelBt{
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+#newChannelForm{
+    background-color: #f9f9f9;
+    width: 50%;
+    height: 29%;
+    display: flex;
+    justify-content: center;
+    margin-top: 6vh;
 }

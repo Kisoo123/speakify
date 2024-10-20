@@ -27,4 +27,9 @@
         INSERT INTO message(channelId, writer, message, messageTime)
         VALUES (#{channelId},#{writer},#{message},#{messageTime})
     </insert>
+    <select id="getChannelList" parameterType="string" resultType="com.project.chatting.model.dto.Channel">
+        SELECT channel.id,channel.userId,channel.roomId,channel.isChannel,channel.channelName
+        FROM channel
+        WHERE userId=${userId} and isChannel = 'true'
+    </select>
 </mapper>

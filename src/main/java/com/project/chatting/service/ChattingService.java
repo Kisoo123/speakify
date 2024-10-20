@@ -1,6 +1,7 @@
 package com.project.chatting.service;
 
 import com.project.chatting.model.dao.ChattingDao;
+import com.project.chatting.model.dto.Channel;
 import com.project.chatting.model.dto.Message;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -31,5 +32,8 @@ public class ChattingService {
     }
     public void sendMessage(Message message){
         dao.sendMessage(session, message);
+    }
+    public List<Channel>getChannelList(String userId){
+        return dao.getChannelList(session,userId);
     }
 }

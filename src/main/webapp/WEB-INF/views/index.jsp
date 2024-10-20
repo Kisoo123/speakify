@@ -39,7 +39,7 @@
         <div id="innder-sidebar">
             <div id="contactButton">
                 <img class="sidebar-icons" id="showFriends" src="${path}/images/icon/user-icon-white.png">
-                <img class="sidebar-icons" src="${path}/images/icon/users-icon-white.png">
+                <img class="sidebar-icons" id="showChannels" src="${path}/images/icon/users-icon-white.png">
                 <img class="sidebar-icons" id="toggle-search" src="${path}/images/icon/search-icon-white.png">
                 <svg class="sidebar-icons-bell bi bi-bell" id="alarm" xmlns="http://www.w3.org/2000/svg" width="16"
                      height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -509,6 +509,30 @@ function handleAnswer(answer) {
                 }
             });
         });
+        $('#showChannels').click(function (){
+            $("#search-input").hide();
+           $('#search-result').empty();
+            let addChannelBt = `
+            <div class="d-grid mx-auto">
+                <button type="button" class="btn btn-outline-dark text-white" id="addChannelBt">채널 추가</button>
+            </div>
+            `;
+            $('#search-result').append(addChannelBt);
+            $.ajax({
+                type:'POST',
+                url:'/getChannelList',
+                data:{'userId':'${loginMember.id}'
+                },
+                success:function (response){
+                   console.log(response);
+                   if(response.length >0){
+                        let channelList = '';
+                    }
+
+                }
+            }
+            )
+        })
         // 친구 아이콘 클릭 시 친구 목록 불러오기
         $('#showFriends').click(function () {
             $("#search-input").hide();
@@ -531,17 +555,23 @@ function handleAnswer(answer) {
                         response.forEach(friend => {
                             console.log(friend);
                             friendListHtml += `
-                                <div class="friend-item dropdown" id="friend-\${friend.usrId}">
-                                <img id="friendProfileImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/\${friend.profilePictureUrl}" alt="Profile Picture" class="rounded-circle" style="background-color:grey;">                                <p class="dropdown-toggle" id="dropdownMenuButton\${friend.usrId}" data-bs-toggle="dropdown" aria-expanded="false">
-                                \${friend.displayName} \${friend.statusMessage || ''}
-                        </p>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton\${friend.usrId}">
-                                <li><a class="dropdown-item" href="#" onclick="viewProfile(\${friend.id})">프로필 보기</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="startCall(\${friend.usrId},'\${friend.display_name}')">통화하기</a></li>
-                            </ul>
-                        </div>
+                            <div class="friend-item dropdown" id="friend-\${friend.usrId}">
+                                <img id="friendProfileImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/\${friend.profilePictureUrl}" alt="Profile Picture" class="rounded-circle" style="background-color:grey;">
+                                    <div class="dropdown-toggle" id="dropdownMenuButton\${friend.usrId}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div>
+                                            \${friend.displayName}
+                                        </div>
+                                        <div id="profile-statusMessage">
+                                            \${friend.statusMessage || ''}
+                                        </div>
+                                    </div>
+
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton\${friend.usrId}">
+                                    <li><a class="dropdown-item" href="#" onclick="viewProfile(\${friend.id})">프로필 보기</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="startCall(\${friend.usrId},'\${friend.display_name}')">통화하기</a></li>
+                                </ul>
+                            </div>
                             `;
-                            ;
                         });
 
                         // 결과를 search-result에 추가
@@ -556,6 +586,38 @@ function handleAnswer(answer) {
                 }
             });
         });
+        $(document).on('click', '#addChannelBt', function () {
+            // #header-main-div 요소의 내용 비우기
+            $('#header-main-div').empty();
+
+            // 새로운 폼 요소 추가 (채널 이미지 업로드 및 채널 이름 입력)
+            let formHtml = `
+                <div class="d-flex justify-content-center" style="height: 100vh;">
+                    <div class="channel-form text-center p-4 rounded shadow" id="newChannelForm">
+                        <form id="createChannelForm" enctype="multipart/form-data">
+                        <h3 class="mb-4">새 채널 생성</h3>
+
+                            <div class="form-group mb-3">
+                                <label for="channelImage" class="form-label">채널 이미지</label>
+                                <input type="file" class="form-control" id="channelImage" name="channelImage" accept="image/*" onchange="previewImage(event)">
+                                <img id="imagePreview" class="mt-2" style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="channelName" class="form-label">채널 이름</label>
+                                <input type="text" class="form-control" id="channelName" name="channelName" placeholder="채널 이름을 입력하세요" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">채널 생성</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+
+
+            // 폼을 #header-main-div에 추가
+            $('#header-main-div').append(formHtml);
+        });
+
 
         // 프로필 보기 함수
         function viewProfile(friendId) {

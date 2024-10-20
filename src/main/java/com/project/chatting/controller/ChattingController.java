@@ -1,5 +1,6 @@
 package com.project.chatting.controller;
 
+import com.project.chatting.model.dto.Channel;
 import com.project.chatting.model.dto.Message;
 import com.project.chatting.model.dto.SignalMessage;
 import com.project.chatting.service.ChattingService;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -48,5 +49,10 @@ public class ChattingController {
     public SignalMessage handleSignal(@Payload SignalMessage signalMessage, @DestinationVariable String roomNo) {
         // 여기서 signalMessage는 클라이언트가 전송한 offer, answer, ICE 후보 등의 정보
         return signalMessage; // 방에 있는 다른 클라이언트들에게 브로드캐스트
+    }
+    @PostMapping("/getChannelList")
+    @ResponseBody
+    public List<Channel> getChannelList(@RequestParam String userId) {
+        return service.getChannelList(userId);
     }
 }
