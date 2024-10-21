@@ -13,4 +13,5 @@ public class Channel {
     private int roomId;
     private String isChannel;
     private String channelName;
+    private String channelImage;
 }

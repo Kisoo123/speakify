@@ -25,7 +25,10 @@ public class ChattingDao {
     public void sendMessage(SqlSessionTemplate session, Message message) {
         session.insert("Chatting.sendMessage",message);
     }
-    public List<Channel>getChannelList(SqlSessionTemplate session,String userId) {
-        return session.selectOne("Chatting.getChannelList",userId);
+    public List<Channel>getChannelList(SqlSessionTemplate session,int userId) {
+        return session.selectList("Chatting.getChannelList",userId);
+    }
+    public int createChannel(SqlSessionTemplate session, Map<String,Object>params) {
+        return session.insert("Chatting.createChannel",params);
     }
 }

@@ -1,5 +1,6 @@
 package com.project.chatting.controller;
 
+import com.project.aws.s3.service.S3Service;
 import com.project.chatting.model.dto.Channel;
 import com.project.chatting.model.dto.Message;
 import com.project.chatting.model.dto.SignalMessage;
@@ -17,14 +18,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.project.alarm.service.AlarmService.getCurrentUser;
+
 @RequiredArgsConstructor
 @Controller
 public class ChattingController {
+    private final S3Service s3Service;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChattingService service;
     @PostMapping("/startCall")
@@ -52,7 +57,28 @@ public class ChattingController {
     }
     @PostMapping("/getChannelList")
     @ResponseBody
-    public List<Channel> getChannelList(@RequestParam String userId) {
+    public List<Channel> getChannelList(@RequestParam int userId) {
         return service.getChannelList(userId);
+    }
+    @PostMapping("/createChannel")
+    public String createChannel(
+            @RequestParam MultipartFile channelImage,
+            @RequestParam String channelName)
+    {
+        int userId = getCurrentUser().getId().intValue();
+        String path = "uploads/public/channel/";
+        String imageName = channelImage.isEmpty()?"SPEAKIFY_1.png":channelImage.getOriginalFilename();
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("channelName", channelName);
+        params.put("userId", userId);
+        params.put("channelImage", imageName);
+        int resultChannel = service.createChannel(params);
+        if ( resultChannel >0 ) {
+            if(!channelImage.isEmpty()) {
+                s3Service.uploadFile(channelImage, path,resultChannel);
+            }
+        }
+        return "redirect:/";
     }
 }

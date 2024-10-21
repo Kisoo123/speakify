@@ -140,12 +140,29 @@ p{
 #addChannelBt{
     margin-right: 1rem;
     margin-left: 1rem;
+    margin-bottom: 1rem !important;
 }
 #newChannelForm{
     background-color: #f9f9f9;
     width: 50%;
-    height: 29%;
+    height: 43%;
     display: flex;
     justify-content: center;
     margin-top: 6vh;
+}
+#imagePreview{
+    width: 5vw;
+    height: 5vw;
+    border-radius: 40%;
+    margin-bottom: 5%;
+}
+#channelListImage{
+    height: 80%;
+    border-radius: 31%;
+}
+.channelContainer{
+    flex-direction:row !important;
+    align-items: center !important;
+    padding-left: 14% !important;
+    height: 4rem !important;
 }

@@ -20,16 +20,20 @@
         SELECT IFNULL((SELECT MAX(roomId) FROM channel), 0) + 1
     </select>
     <insert id="createRoom" parameterType="map">
-        INSERT INTO channel (userId, roomId)
-        SELECT #{createUser}, #{nextRoomId}
+        INSERT INTO channel (userId, roomId,isChannel)
+        VALUES (#{createUser}, #{nextRoomId},'false')
     </insert>
     <insert id="sendMessage" parameterType="com.project.chatting.model.dto.Message" >
         INSERT INTO message(channelId, writer, message, messageTime)
         VALUES (#{channelId},#{writer},#{message},#{messageTime})
     </insert>
-    <select id="getChannelList" parameterType="string" resultType="com.project.chatting.model.dto.Channel">
-        SELECT channel.id,channel.userId,channel.roomId,channel.isChannel,channel.channelName
+    <select id="getChannelList" parameterType="int" resultType="com.project.chatting.model.dto.Channel">
+        SELECT id, userid, roomid, ischannel, channelname, channelimage
         FROM channel
         WHERE userId=${userId} and isChannel = 'true'
     </select>
+    <insert id="createChannel" parameterType="map">
+        INSERT INTO channel (userId, roomId, isChannel, channelName,channelImage)
+        VALUES(#{userId},#{roomNo},'true',#{channelName},#{channelImage})
+    </insert>
 </mapper>

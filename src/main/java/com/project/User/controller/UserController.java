@@ -67,11 +67,9 @@ public class UserController {
             @RequestParam(value = "displayName", required = false) String displayName,                // 선택적 문자열
             @RequestParam(value = "statusMessage", required = false) String statusMessage,
             HttpServletRequest request) {
+        String path = "uploads/public/profile/";
         User user = getCurrentUser();
-        System.out.println("테스트용"+"profilePicture"+profilePicture+"displayName"+displayName+"statusMessage"+statusMessage);
-        System.out.println("user.getDisplayName()"+user.getDisplayName());
-        System.out.println("displayName"+displayName);
-        if (!profilePicture.isEmpty())user.setProfilePictureUrl(user.getId()+s3Service.uploadFile(profilePicture));
+        if(!profilePicture.isEmpty())user.setProfilePictureUrl(user.getId()+s3Service.uploadFile(profilePicture,path,user.getId().intValue()));
         if(!displayName.isEmpty())user.setDisplayName(displayName);
         if(!statusMessage.isEmpty())user.setStatusMessage(statusMessage);
 

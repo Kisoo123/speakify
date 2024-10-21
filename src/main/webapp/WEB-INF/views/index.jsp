@@ -509,30 +509,45 @@ function handleAnswer(answer) {
                 }
             });
         });
-        $('#showChannels').click(function (){
+        $('#showChannels').click(function () {
             $("#search-input").hide();
-           $('#search-result').empty();
+            $('#search-result').empty();
+
             let addChannelBt = `
             <div class="d-grid mx-auto">
                 <button type="button" class="btn btn-outline-dark text-white" id="addChannelBt">채널 추가</button>
             </div>
             `;
             $('#search-result').append(addChannelBt);
-            $.ajax({
-                type:'POST',
-                url:'/getChannelList',
-                data:{'userId':'${loginMember.id}'
-                },
-                success:function (response){
-                   console.log(response);
-                   if(response.length >0){
-                        let channelList = '';
-                    }
 
+            $.ajax({
+                type: 'POST',
+                url: '/getChannelList',
+                data: {
+                    'userId': `${loginMember.id}`
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.length > 0) {
+                        let channelList = ``; // Bootstrap 리스트 그룹 시작
+                        response.forEach(channel => {
+                            channelList += `
+                                <div class="list-group mt-1 bg-dark channelContainer">
+                                    <img id="channelListImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/channel/\${channel.channelImage}">
+                                    <a href="#" class="list-group-item list-group-item-action bg-dark">
+                                        \${channel.channelName}
+                                    </a>
+                                </div>
+                            `;
+                        });
+                        $('#search-result').append(channelList);
+                    } else {
+                        $('#search-result').append('<p class="text-center text-muted mt-3">등록된 채널이 없습니다.</p>');
+                    }
                 }
-            }
-            )
-        })
+            });
+        });
+
         // 친구 아이콘 클릭 시 친구 목록 불러오기
         $('#showFriends').click(function () {
             $("#search-input").hide();
@@ -586,6 +601,7 @@ function handleAnswer(answer) {
                 }
             });
         });
+
         $(document).on('click', '#addChannelBt', function () {
             // #header-main-div 요소의 내용 비우기
             $('#header-main-div').empty();
@@ -594,13 +610,13 @@ function handleAnswer(answer) {
             let formHtml = `
                 <div class="d-flex justify-content-center" style="height: 100vh;">
                     <div class="channel-form text-center p-4 rounded shadow" id="newChannelForm">
-                        <form id="createChannelForm" enctype="multipart/form-data">
+                        <form action="/createChannel" method="post" id="createChannelForm" enctype="multipart/form-data">
                         <h3 class="mb-4">새 채널 생성</h3>
 
+                                <img id="imagePreview" src="${path}/images/logo/SPEAKIFY_1.png" class="mt-2">
                             <div class="form-group mb-3">
                                 <label for="channelImage" class="form-label">채널 이미지</label>
                                 <input type="file" class="form-control" id="channelImage" name="channelImage" accept="image/*" onchange="previewImage(event)">
-                                <img id="imagePreview" class="mt-2" style="display: none; max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="channelName" class="form-label">채널 이름</label>
@@ -618,6 +634,20 @@ function handleAnswer(answer) {
             $('#header-main-div').append(formHtml);
         });
 
+        $(document).on('change', '#channelImage', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    // img 태그의 src 속성을 선택한 파일로 변경
+                    $('#imagePreview').attr('src', e.target.result).show();
+                };
+
+                reader.readAsDataURL(file); // 파일을 읽어서 base64로 변환
+            }
+        });
 
         // 프로필 보기 함수
         function viewProfile(friendId) {

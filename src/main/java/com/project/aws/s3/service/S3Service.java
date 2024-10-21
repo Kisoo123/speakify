@@ -28,11 +28,10 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file,String path,int serializer) {
         User user = getCurrentUser();
-        String userId = user.getId().toString();
-        String fileName = "uploads/public/profile/" + userId + file.getOriginalFilename();
-        String oldFileName = "uploads/public/profile/" + user.getProfilePictureUrl();
+        String fileName = path + serializer + file.getOriginalFilename();
+        String oldFileName = path + user.getProfilePictureUrl();
         if(Objects.equals(file.getOriginalFilename(), "default-profile-img-white.png")){
             return file.getOriginalFilename();
         }
