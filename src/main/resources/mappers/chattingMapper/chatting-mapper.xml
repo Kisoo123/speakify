@@ -10,7 +10,7 @@
         GROUP BY roomId
         HAVING COUNT(DISTINCT userId) = 2;
     </select>
-    <select id="checkMessage" resultType="com.project.chatting.model.dto.Message" parameterType="map">
+    <select id="checkMessage" resultType="com.project.chatting.model.dto.Message" parameterType="int">
         SELECT id,channelId,writer,message,messageTime
         FROM message
         WHERE channelId = #{roomNo}
@@ -36,4 +36,20 @@
         INSERT INTO channel (userId, roomId, isChannel, channelName,channelImage)
         VALUES(#{userId},#{roomNo},'true',#{channelName},#{channelImage})
     </insert>
+    <select id="getChannelUsers" parameterType="int" resultType="com.project.security.model.dto.User">
+        SELECT usr.id,
+               usr.username,
+               usr.role,
+               usr.displayName,
+               usr.profilePictureUrl,
+               usr.email,
+               usr.statusMessage,
+               usr.uniqueTag
+        FROM users usr
+                 INNER JOIN channel cnl ON usr.id = cnl.userId
+        WHERE cnl.roomId = #{roomId}
+        </select>
+        <insert id="addInnerChannel" parameterType="com.project.chatting.model.dto.InnnerChannel">
+            INSERT INTO innerChannel(channelId, channelType, channelName) VALUES(#{channelId},#{channelType},#{channelName})
+        </insert>
 </mapper>

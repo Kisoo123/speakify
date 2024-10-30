@@ -2,11 +2,13 @@ package com.project.chatting.service;
 
 import com.project.chatting.model.dao.ChattingDao;
 import com.project.chatting.model.dto.Channel;
+import com.project.chatting.model.dto.InnnerChannel;
 import com.project.chatting.model.dto.Message;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +32,9 @@ public class ChattingService {
             params.put("createUser",params.get("friendId"));
             result += dao.createRoom(session,params);
         }
-        //map에 방 번호를 넣음
-        params.put("roomNo",roomNo);
+
         //기존 방에 저장된 채팅 메시지 불러오기
-        List<Message> messages = dao.checkMessage(session,params);
+        List<Message> messages = dao.checkMessage(session,roomNo);
         //map에 채팅 저장
         params.put("messages",messages);
         //반환
@@ -54,5 +55,14 @@ public class ChattingService {
         //생성된 방 번호를 토대로 방 생성
         dao.createChannel(session,params);
         return roomNo;
+    }
+    public Map<String,Object> getChannelInfo(int roomId){
+        Map<String,Object> channelInfo = new HashMap<>();
+        channelInfo.put("channelMessages",dao.checkMessage(session,roomId));
+        channelInfo.put("channelUsers",dao.getChannelUsers(session,roomId));
+        return channelInfo;
+    }
+    public InnnerChannel addInnerChannel(InnnerChannel innerChannel){
+        return dao.addInnerChannel(session,innerChannel);
     }
 }

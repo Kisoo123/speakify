@@ -161,8 +161,58 @@ p{
     border-radius: 31%;
 }
 .channelContainer{
+    display: flex;
     flex-direction:row !important;
     align-items: center !important;
     padding-left: 14% !important;
     height: 4rem !important;
+}
+#channelRightSidebar{
+    display: block;
+}
+ul{
+    list-style: none;
+}
+.rightSidebarProfileImg{
+    width: 15%;
+    border-radius: 100%;
+    aspect-ratio: 1 / 1;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+#innerChannelContainer{
+    padding-left: 1rem;
+    height: 8%;
+    background-color: #141414;
+    display: flex;
+    flex-direction: row;
+}
+#chatInnerChannel{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#addChatInnerChannel{
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+#channelName{
+    width: 84%;
+}
+.form-group{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.modal-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

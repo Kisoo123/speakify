@@ -104,7 +104,9 @@
                     <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
                 </form>
             </div>
+
         </sec:authorize>
+
     </div>
 
 </div>
@@ -532,7 +534,7 @@ function handleAnswer(answer) {
                         let channelList = ``; // Bootstrap 리스트 그룹 시작
                         response.forEach(channel => {
                             channelList += `
-                                <div class="list-group mt-1 bg-dark channelContainer">
+                                <div onclick="showChannelWindow(\${channel.roomId})" class= "list-group mt-1 bg-dark channelContainer">
                                     <img id="channelListImage" src="https://speakifybucket.s3.amazonaws.com/uploads/public/channel/\${channel.channelImage}">
                                     <a href="#" class="list-group-item list-group-item-action bg-dark">
                                         \${channel.channelName}
@@ -547,6 +549,111 @@ function handleAnswer(answer) {
                 }
             });
         });
+
+        function showChannelWindow(roomId){
+            $.ajax({
+                url:"/getChannelInfo",
+                method:"POST",
+                data:{"roomId":roomId},
+                success:function(response){
+                    console.log(response);
+                    let channelFriendsList = '';
+                    response.channelUsers.forEach(
+                            users=> channelFriendsList+=`
+                                    <li class="list-group-item"><img class="rightSidebarProfileImg" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/\${users.profilePictureUrl}"></img>\${users.displayName}<li>
+                            `
+                        )
+                    $("#header-main-div").empty();
+                    let channelUi = `
+                                <%--      내부채널 생성 모달팝업      --%>
+                            <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="chatModalLabel">Create Inner Channel</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="channelName">Channel Name</label>
+                                                <input type="text" class="form-control" id="channelName" name="channelName" placeholder="Enter channel name" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Channel Type</label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" id="textChannel" name="channelType" value="text">
+                                                    <label class="form-check-label" for="textChannel">
+                                                        Text Channel
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" id="voiceChannel" name="channelType" value="voice">
+                                                    <label class="form-check-label" for="voiceChannel">
+                                                        Voice Channel
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="submitInnerChannelForm()">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; width: 100%;height: 100%;background-color: aqua">
+                                <div style="display:flex; flex-direction: column; width: 90%;background-color: #5a23c8">
+                                    <div id="innerChannelContainer">
+                                        <div id="chatInnerChannel">
+                                            <div id="addChatInnerChannel" class="bi bi-plus-lg"></div>
+                                        </div>
+                                    </div>
+                                    <div style="height:92%">
+                                    </div>
+                                    <div class="chat-input" style="display: flex">
+                                        <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
+                                        <button class="btn btn-primary" onclick="sendMessage()">보내기</button>
+                                    </div>
+                                </div>
+                                <ul class="list-group"id="channelRightSidebar" style="width:10%">
+                                </ul>
+                            </div>`
+                    $("#header-main-div").append(channelUi);
+                    $("#channelRightSidebar").append(channelFriendsList);
+                }
+
+            });
+        }
+            $(document).on('click','#addChatInnerChannel', function () {
+                $('#chatModal').modal('show');
+            });
+                function submitInnerChannelForm() {
+                    const channelName = $('#channelName').val();
+                    const channelType = $('input[name="channelType"]:checked').val();
+                    console.log('안녕하세요');
+
+                    $.ajax({
+                        url: '/addInnerChannel',
+                        method: 'POST',
+                        data: {
+                            channelId: roomNo,
+                            channelName: channelName,
+                            channelType: channelType
+                        },
+                        success: function(response) {
+                            console.log("Channel created:", response);
+                            $('#chatModal').modal('hide');
+                        },
+                        error: function(error) {
+                            console.log("Error creating channel:", error);
+                            // Handle the error case
+                        }
+                    });
+                }
+
 
         // 친구 아이콘 클릭 시 친구 목록 불러오기
         $('#showFriends').click(function () {
@@ -678,7 +785,7 @@ function handleAnswer(answer) {
                 </div>
                 <div class="chat-input" style="display: flex">
                     <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
-                    <button class="btn btn-primary" onclick="sendMessage(\${friendId})">보내기</button>
+                    <button class="btn btn-primary" onclick="sendMessage()">보내기</button>
                 </div>
             </div>
         </div>
@@ -746,16 +853,13 @@ function handleAnswer(answer) {
         }
 
         // 메시지 보내기 함수
-        function sendMessage(friendId) {
+        function sendMessage() {
             const message = $('#messageInput').val();
             if (message.trim() === '') {
                 alert('메시지를 입력하세요.');
                 return;
             }
 
-            // 메시지를 서버로 전송하는 로직 (추후 서버 연동 필요)
-            console.log('메시지 전송:', message, '대상:', friendId);
-            console.log('방번호' + roomNo);
             $.ajax({
                 type: "POST",
                 url: "/sendMessage",

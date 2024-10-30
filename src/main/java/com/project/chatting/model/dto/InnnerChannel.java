@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Channel {
+public class InnnerChannel {
     private int id;
-    private Long userId;
-    private int roomId;
-    private String isChannel;
     private String channelName;
-    private String channelImage;
+    private String channelId;
+    private String channelType;
 }
