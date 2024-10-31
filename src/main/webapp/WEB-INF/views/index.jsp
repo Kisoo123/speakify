@@ -551,6 +551,7 @@ function handleAnswer(answer) {
         });
 
         function showChannelWindow(roomId){
+            roomNo = roomId;
             $.ajax({
                 url:"/getChannelInfo",
                 method:"POST",
@@ -608,7 +609,7 @@ function handleAnswer(answer) {
                                 <div style="display:flex; flex-direction: column; width: 90%;background-color: #5a23c8">
                                     <div id="innerChannelContainer">
                                         <div id="chatInnerChannel">
-                                            <div id="addChatInnerChannel" class="bi bi-plus-lg"></div>
+                                            <div id="addInnerChannel" class="innerChannel bi bi-plus-lg"></div>
                                         </div>
                                     </div>
                                     <div style="height:92%">
@@ -620,14 +621,26 @@ function handleAnswer(answer) {
                                 </div>
                                 <ul class="list-group"id="channelRightSidebar" style="width:10%">
                                 </ul>
-                            </div>`
+                            </div>`;
+                    let innerChannels1 ='';
+                    response.innerChannels.forEach(
+                        innerChannel=> {innerChannels1+=`<div class="innerChannel innerChannelName">\${innerChannel.channelName}`
+                        if(innerChannel.channelType=='voice'){
+                            innerChannels1+=`<div class="innerChannelType bi bi-volume-off"></div>`
+                        }else if(innerChannel.channelType=='text'){
+                            innerChannels1+=`<div class="voiceInnerChannelIcon innerChannelType bi bi-chat"></div>`
+                        }
+                        innerChannels1+=`</div>`
+                    });
+                    console.log(innerChannels1+'이너채널');
                     $("#header-main-div").append(channelUi);
+                    $("#chatInnerChannel").append(innerChannels1);
                     $("#channelRightSidebar").append(channelFriendsList);
                 }
 
             });
         }
-            $(document).on('click','#addChatInnerChannel', function () {
+            $(document).on('click','#addInnerChannel', function () {
                 $('#chatModal').modal('show');
             });
                 function submitInnerChannelForm() {
@@ -639,9 +652,9 @@ function handleAnswer(answer) {
                         url: '/addInnerChannel',
                         method: 'POST',
                         data: {
-                            channelId: roomNo,
-                            channelName: channelName,
-                            channelType: channelType
+                            'channelId': roomNo,
+                            'channelName': channelName,
+                            'channelType': channelType
                         },
                         success: function(response) {
                             console.log("Channel created:", response);

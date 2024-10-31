@@ -1,7 +1,7 @@
 package com.project.chatting.model.dao;
 
 import com.project.chatting.model.dto.Channel;
-import com.project.chatting.model.dto.InnnerChannel;
+import com.project.chatting.model.dto.InnerChannel;
 import com.project.chatting.model.dto.Message;
 import com.project.security.model.dto.User;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -36,7 +36,11 @@ public class ChattingDao {
     public List<User>getChannelUsers(SqlSessionTemplate session,int roomId) {
         return session.selectList("Chatting.getChannelUsers",roomId);
     }
-    public InnnerChannel addInnerChannel(SqlSessionTemplate session, InnnerChannel innerChannel) {
-        return session.selectOne("Chatting.addInnerChannel",innerChannel);
+    public InnerChannel addInnerChannel(SqlSessionTemplate session, InnerChannel innerChannel) {
+       session.insert("Chatting.addInnerChannel",innerChannel);
+       return innerChannel;
+    }
+    public List<InnerChannel> selectInnerChannel(SqlSessionTemplate session, int roomId) {
+       return session.selectList("Chatting.selectInnerChannel",roomId);
     }
 }

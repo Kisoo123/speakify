@@ -2,7 +2,7 @@ package com.project.chatting.service;
 
 import com.project.chatting.model.dao.ChattingDao;
 import com.project.chatting.model.dto.Channel;
-import com.project.chatting.model.dto.InnnerChannel;
+import com.project.chatting.model.dto.InnerChannel;
 import com.project.chatting.model.dto.Message;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -58,11 +58,13 @@ public class ChattingService {
     }
     public Map<String,Object> getChannelInfo(int roomId){
         Map<String,Object> channelInfo = new HashMap<>();
+        channelInfo.put("innerChannels",dao.selectInnerChannel(session,roomId));
         channelInfo.put("channelMessages",dao.checkMessage(session,roomId));
         channelInfo.put("channelUsers",dao.getChannelUsers(session,roomId));
         return channelInfo;
     }
-    public InnnerChannel addInnerChannel(InnnerChannel innerChannel){
+    public InnerChannel addInnerChannel(InnerChannel innerChannel){
+
         return dao.addInnerChannel(session,innerChannel);
     }
 }

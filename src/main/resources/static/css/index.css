@@ -193,7 +193,7 @@ ul{
     align-items: center;
 }
 
-#addChatInnerChannel{
+.innerChannel{
     width: 4rem;
     height: 4rem;
     display: flex;
@@ -201,6 +201,10 @@ ul{
     justify-content: center;
     font-size: 2rem;
     color: white;
+    margin-left: 0.6rem;
+    background-color: #2d2e2e;
+    border-radius: 20%;
+    position:relative;
 }
 
 #channelName{
@@ -215,4 +219,15 @@ ul{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.innerChannelName{
+    overflow:hidden;
+}
+.innerChannelType{
+    color: white;
+    position: absolute;
+    font-size: 50%;
+    left: 42%;
+    top: -2%;
 }

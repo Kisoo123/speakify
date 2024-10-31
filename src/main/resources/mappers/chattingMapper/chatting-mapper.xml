@@ -49,7 +49,12 @@
                  INNER JOIN channel cnl ON usr.id = cnl.userId
         WHERE cnl.roomId = #{roomId}
         </select>
-        <insert id="addInnerChannel" parameterType="com.project.chatting.model.dto.InnnerChannel">
+        <insert id="addInnerChannel" parameterType="com.project.chatting.model.dto.InnerChannel" useGeneratedKeys="true" keyProperty="id">
             INSERT INTO innerChannel(channelId, channelType, channelName) VALUES(#{channelId},#{channelType},#{channelName})
         </insert>
+        <select id="selectInnerChannel" parameterType="int" resultType="com.project.chatting.model.dto.InnerChannel">
+            SELECT id, channelId, channelType, channelName
+            FROM innerChannel
+            WHERE channelId=#{roomId}
+        </select>
 </mapper>

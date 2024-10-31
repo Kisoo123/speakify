@@ -2,7 +2,7 @@ package com.project.chatting.controller;
 
 import com.project.aws.s3.service.S3Service;
 import com.project.chatting.model.dto.Channel;
-import com.project.chatting.model.dto.InnnerChannel;
+import com.project.chatting.model.dto.InnerChannel;
 import com.project.chatting.model.dto.Message;
 import com.project.chatting.model.dto.SignalMessage;
 import com.project.chatting.service.ChattingService;
@@ -90,8 +90,8 @@ public class ChattingController {
     public ResponseEntity<?>addInnerChannel(@RequestParam int channelId,
                                             @RequestParam String channelType,
                                             @RequestParam String channelName){
-        InnnerChannel innerChannel = new InnnerChannel();
-        innerChannel.setId(channelId);
+        InnerChannel innerChannel = new InnerChannel();
+        innerChannel.setChannelId(channelId);
         innerChannel.setChannelType(channelType);
         innerChannel.setChannelName(channelName);
         return ResponseEntity.ok(service.addInnerChannel(innerChannel));
