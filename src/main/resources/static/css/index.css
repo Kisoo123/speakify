@@ -231,3 +231,9 @@ ul{
     left: 42%;
     top: -2%;
 }
+#channelMessages,#chattingUI{
+    background-color: #2d2e2e !important;
+}
+#channelRightSidebar{
+    background-color: #141414 !important;
+}

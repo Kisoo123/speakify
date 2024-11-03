@@ -45,8 +45,12 @@ public class ChattingController {
     @PostMapping("/sendMessage")
     public ResponseEntity<?> sendMessage(@RequestBody Message message) {
         message.setMessage(StringEscapeUtils.escapeHtml4(message.getMessage()));
+        String channelId = message.getChannelId()+"";
+        if(message.getInnerChannelId()!=0){
+            channelId += "/"+message.getInnerChannelId();
+        }
         service.sendMessage(message);
-        simpMessagingTemplate.convertAndSend("/topic/room/"+message.getChannelId(),message);
+        simpMessagingTemplate.convertAndSend("/topic/room/"+channelId,message);
         return null;
     }
     // 클라이언트가 전송한 메시지를 수신
@@ -95,5 +99,13 @@ public class ChattingController {
         innerChannel.setChannelType(channelType);
         innerChannel.setChannelName(channelName);
         return ResponseEntity.ok(service.addInnerChannel(innerChannel));
+    }
+    @PostMapping("/getMessage")
+    public ResponseEntity<?>getMessage(@RequestParam int innerChannelId,@RequestParam int channelId){
+        Map<String,Object>param = new HashMap<>();
+        param.put("innerChannelId", innerChannelId);
+        param.put("channelId", channelId);
+        List<Message> messages = service.getMessage(param);
+        return ResponseEntity.ok(messages);
     }
 }

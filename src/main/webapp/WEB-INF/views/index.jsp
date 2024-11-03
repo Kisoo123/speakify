@@ -605,26 +605,29 @@ function handleAnswer(answer) {
                                 </div>
                             </div>
 
-                            <div style="display: flex; width: 100%;height: 100%;background-color: aqua">
-                                <div style="display:flex; flex-direction: column; width: 90%;background-color: #5a23c8">
+                            <div style="display: flex; width: 100%;height: 100%;">
+                                <div style="display:flex; flex-direction: column; width: 90%;">
                                     <div id="innerChannelContainer">
                                         <div id="chatInnerChannel">
                                             <div id="addInnerChannel" class="innerChannel bi bi-plus-lg"></div>
                                         </div>
                                     </div>
-                                    <div style="height:92%">
+                                    <div id="chattingUI" style="height:92%">
                                     </div>
-                                    <div class="chat-input" style="display: flex">
-                                        <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
-                                        <button class="btn btn-primary" onclick="sendMessage()">보내기</button>
-                                    </div>
+
                                 </div>
                                 <ul class="list-group"id="channelRightSidebar" style="width:10%">
                                 </ul>
                             </div>`;
                     let innerChannels1 ='';
                     response.innerChannels.forEach(
-                        innerChannel=> {innerChannels1+=`<div class="innerChannel innerChannelName">\${innerChannel.channelName}`
+                        innerChannel=> {
+                            stompClient.subscribe('/topic/room/' + roomNo+'/'+innerChannel.id, function (message) {
+                                let parsedBody = JSON.parse(message.body);
+
+                                $('#channelMessages').append(`<div style="color:white">\${parsedBody.message} \${parsedBody.messageTime}</div>`)
+                            });
+                            innerChannels1 += `<div class="innerChannel innerChannelName" data-id="\${innerChannel.id}" data-type="\${innerChannel.channelType}">\${innerChannel.channelName}`
                         if(innerChannel.channelType=='voice'){
                             innerChannels1+=`<div class="innerChannelType bi bi-volume-off"></div>`
                         }else if(innerChannel.channelType=='text'){
@@ -632,7 +635,6 @@ function handleAnswer(answer) {
                         }
                         innerChannels1+=`</div>`
                     });
-                    console.log(innerChannels1+'이너채널');
                     $("#header-main-div").append(channelUi);
                     $("#chatInnerChannel").append(innerChannels1);
                     $("#channelRightSidebar").append(channelFriendsList);
@@ -640,6 +642,40 @@ function handleAnswer(answer) {
 
             });
         }
+        let innerChannelId = null;
+            $(document).on('click','.innerChannelName',function(){
+                $('.messages').empty();
+                let textUI =`
+                                <div class="messages" id="channelMessages" style="height: 97%">
+
+                                </div>
+                                <div style="height: 3%">
+                                    <input class="messageInput" style="width: 100%;height:100%"></input>
+                                </div>`;
+                let voiceUI =`
+                        <div>
+
+</div>
+                `;
+                innerChannelId = $(this).data('id');
+                let channelType = $(this).data('type');
+                if(channelType=='text'){
+                    let messages = '';
+                    $.ajax({
+                        url:'/getMessage',
+                        data:{'innerChannelId':innerChannelId,'channelId':roomNo},
+                        method:'POST',
+                        success:function(response){
+                            response.forEach(
+                                message=>{messages += `<div style="color:white">\${message.message} \${message.messageTime}</div>`
+                            })
+                            $('#channelMessages').append(messages);
+                            console.log(response);
+                        }
+                    });
+                }
+                $('#chattingUI').append(channelType == 'text' ? textUI : voiceUI);
+            });
             $(document).on('click','#addInnerChannel', function () {
                 $('#chatModal').modal('show');
             });
@@ -778,6 +814,7 @@ function handleAnswer(answer) {
         // 통화하기 함수
         var roomNo = null;
         function startCall(friendId, displayName) {
+            innerChannelId=null;
             console.log('친구아이디' + friendId);
             // 기존 채팅방이 있을 경우 제거
             $('#chat-room').remove();
@@ -797,8 +834,8 @@ function handleAnswer(answer) {
                     <!-- 여기에 채팅 메시지가 추가됩니다. -->
                 </div>
                 <div class="chat-input" style="display: flex">
-                    <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
-                    <button class="btn btn-primary" onclick="sendMessage()">보내기</button>
+                    <input type="text" id="messageInput" class="messageInput form-control" placeholder="메시지를 입력하세요">
+                    <button class="btn btn-primary" onclick="sendMessage($(this).prev().val())">보내기</button>
                 </div>
             </div>
         </div>
@@ -811,6 +848,7 @@ function handleAnswer(answer) {
                     myId: ${loginMember.id}
                 },
                 success: function (response) {
+                    console.log(response);
                     console.log(response.roomNo + "방번호");
                     roomNo = response.roomNo;
                     let messages = response.messages;
@@ -866,8 +904,7 @@ function handleAnswer(answer) {
         }
 
         // 메시지 보내기 함수
-        function sendMessage() {
-            const message = $('#messageInput').val();
+        function sendMessage(message) {
             if (message.trim() === '') {
                 alert('메시지를 입력하세요.');
                 return;
@@ -881,7 +918,8 @@ function handleAnswer(answer) {
                     channelId: roomNo,
                     writer: ${loginMember.id},
                     message: message,
-                    messageTime: new Date().getTime()
+                    messageTime: new Date().getTime(),
+                    innerChannelId:innerChannelId
                 }),
                 success: function (response) {
                     console.log(response);
@@ -889,14 +927,14 @@ function handleAnswer(answer) {
             })
 
             // 전송한 메시지를 채팅창에 추가
-            $('#messageInput').val(''); // 입력창 비우기
-            $('#messages').scrollTop($('#messages')[0].scrollHeight);
+            $('.messageInput').val(''); // 입력창 비우기
+            $('.messages').scrollTop($('.messages')[0].scrollHeight);
         }
 
-        $(document).on('keydown', '#messageInput', function (event) {
+        $(document).on('keydown', '.messageInput', function (event) {
             if (event.which === 13 || event.keyCode === 13) {
                 event.preventDefault(); // 엔터 키로 줄바꿈 방지
-                sendMessage();
+                sendMessage($(this).val());
             }
         });
 

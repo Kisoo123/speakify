@@ -24,8 +24,8 @@
         VALUES (#{createUser}, #{nextRoomId},'false')
     </insert>
     <insert id="sendMessage" parameterType="com.project.chatting.model.dto.Message" >
-        INSERT INTO message(channelId, writer, message, messageTime)
-        VALUES (#{channelId},#{writer},#{message},#{messageTime})
+        INSERT INTO message(channelId, writer, message, messageTime,innerChannelId)
+        VALUES (#{channelId},#{writer},#{message},#{messageTime},#{innerChannelId})
     </insert>
     <select id="getChannelList" parameterType="int" resultType="com.project.chatting.model.dto.Channel">
         SELECT id, userid, roomid, ischannel, channelname, channelimage
@@ -57,4 +57,9 @@
             FROM innerChannel
             WHERE channelId=#{roomId}
         </select>
+    <select id="getMessage" parameterType="map" resultType="com.project.chatting.model.dto.Message">
+        SELECT id, channelId, writer, message, messageTime, innerChannelId
+        FROM message
+        WHERE channelId=#{channelId} AND innerChannelId = #{innerChannelId}
+    </select>
 </mapper>

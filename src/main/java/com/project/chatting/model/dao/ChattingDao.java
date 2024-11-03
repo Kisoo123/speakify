@@ -43,4 +43,7 @@ public class ChattingDao {
     public List<InnerChannel> selectInnerChannel(SqlSessionTemplate session, int roomId) {
        return session.selectList("Chatting.selectInnerChannel",roomId);
     }
+    public List<Message> getMessage(SqlSessionTemplate session, Map<String,Object>params) {
+        return session.selectList("Chatting.getMessage",params);
+    }
 }

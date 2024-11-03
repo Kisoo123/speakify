@@ -17,4 +17,5 @@ public class Message {
     private long writer;
     private String message;
     private Timestamp messageTime;
+    private int innerChannelId;
 }

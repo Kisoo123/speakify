@@ -36,6 +36,7 @@ public class ChattingService {
         //기존 방에 저장된 채팅 메시지 불러오기
         List<Message> messages = dao.checkMessage(session,roomNo);
         //map에 채팅 저장
+        params.put("roomNo",roomNo);
         params.put("messages",messages);
         //반환
         return params;
@@ -66,5 +67,8 @@ public class ChattingService {
     public InnerChannel addInnerChannel(InnerChannel innerChannel){
 
         return dao.addInnerChannel(session,innerChannel);
+    }
+    public List<Message> getMessage(Map<String,Object>param){
+        return dao.getMessage(session,param);
     }
 }
