@@ -236,4 +236,9 @@ ul{
 }
 #channelRightSidebar{
     background-color: #141414 !important;
+    border-radius: 0 !important;
+}
+#inviteFriend{
+    color: white;
+    font-size: 1.3rem;
 }

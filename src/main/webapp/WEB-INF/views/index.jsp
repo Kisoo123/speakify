@@ -617,6 +617,9 @@ function handleAnswer(answer) {
 
                                 </div>
                                 <ul class="list-group"id="channelRightSidebar" style="width:10%">
+                                    <div style="height:2.1rem">
+                                        <div class="bi bi-person-plus" id="inviteFriend"></div>
+                                    </div>
                                 </ul>
                             </div>`;
                     let innerChannels1 ='';
@@ -644,7 +647,7 @@ function handleAnswer(answer) {
         }
         let innerChannelId = null;
             $(document).on('click','.innerChannelName',function(){
-                $('.messages').empty();
+                $('#chattingUI').empty();
                 let textUI =`
                                 <div class="messages" id="channelMessages" style="height: 97%">
 
