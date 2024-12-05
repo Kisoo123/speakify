@@ -151,9 +151,9 @@
             });
         });
 
-/*                                      음성채팅 관련                                      */
+        /*                                      음성채팅 관련                                      */
 
-         $(document).on('click', '#start-call-button', function () {
+        $(document).on('click', '#start-call-button', function () {
             console.log('start-call-button');
             createPeerConnection(); // PeerConnection 생성
             joinRoom(); // 방에 입장
@@ -163,9 +163,9 @@
         // 방에 입장하는 함수
         function joinRoom() {
             // 해당 방의 신호 경로를 구독 (WebRTC 신호 처리)
-            stompClient.subscribe('/topic/signal/' + roomNo, function(message) {
+            stompClient.subscribe('/topic/signal/' + roomNo, function (message) {
                 const data = JSON.parse(message.body);
-                        // 자신이 보낸 메시지인지 확인하고, 자신이 보낸 메시지라면 무시
+                // 자신이 보낸 메시지인지 확인하고, 자신이 보낸 메시지라면 무시
                 if (data.loginMemberId === ${loginMember.id}) {
                     console.log("자신의 메시지 무시");
                     return; // 자신이 보낸 메시지는 처리하지 않음
@@ -182,30 +182,30 @@
             }));
         }
 
-            let peerConnection;
-            let iceCandidatesQueue = [];  // ICE 후보를 저장할 큐
-            let remoteDescriptionSet = false;  // remote description이 설정되었는지 확인하는 플래그
+        let peerConnection;
+        let iceCandidatesQueue = [];  // ICE 후보를 저장할 큐
+        let remoteDescriptionSet = false;  // remote description이 설정되었는지 확인하는 플래그
 
         // PeerConnection 생성 함수
         function createPeerConnection() {
 
             console.log('peerConnection');
             const config = {
-                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] // STUN 서버 설정
+                iceServers: [{urls: 'stun:stun.l.google.com:19302'}] // STUN 서버 설정
             };
 
             peerConnection = new RTCPeerConnection(config); // PeerConnection 생성
 
-        peerConnection.oniceconnectionstatechange = () => {
-            console.log('ICE connection state:', peerConnection.iceConnectionState);
-            if (peerConnection.iceConnectionState === 'connected') {
-                console.log('Peer connection established successfully!');
-            } else if (peerConnection.iceConnectionState === 'disconnected') {
-                console.log('Peer connection disconnected.');
-            } else if (peerConnection.iceConnectionState === 'failed') {
-                console.log('Peer connection failed.');
-            }
-        };
+            peerConnection.oniceconnectionstatechange = () => {
+                console.log('ICE connection state:', peerConnection.iceConnectionState);
+                if (peerConnection.iceConnectionState === 'connected') {
+                    console.log('Peer connection established successfully!');
+                } else if (peerConnection.iceConnectionState === 'disconnected') {
+                    console.log('Peer connection disconnected.');
+                } else if (peerConnection.iceConnectionState === 'failed') {
+                    console.log('Peer connection failed.');
+                }
+            };
 
             // ICE candidate 수집
             peerConnection.onicecandidate = event => {
@@ -231,7 +231,7 @@
 
         // WebRTC Offer 생성 및 STOMP로 전송
         function startSignaling() {
-            navigator.mediaDevices.getUserMedia({ audio: true })
+            navigator.mediaDevices.getUserMedia({audio: true})
                 .then(stream => {
                     // 로컬 오디오 트랙을 peerConnection에 추가
                     stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
@@ -254,52 +254,50 @@
                 .catch(error => console.error('Error accessing media devices:', error));
         }
 
-// Offer를 받았을 때 처리
-function handleOffer(offer) {
-    console.log('Offer received:', offer);  // 수신된 offer 로그 추가
-    const remoteDescription = new RTCSessionDescription(offer);
+        // Offer를 받았을 때 처리
+        function handleOffer(offer) {
+            console.log('Offer received:', offer);  // 수신된 offer 로그 추가
+            const remoteDescription = new RTCSessionDescription(offer);
 
 
-
-    // remote description을 설정
-    peerConnection.setRemoteDescription(remoteDescription)
-        .then(() => {
-            console.log('Current signaling state after setting remote description:', peerConnection.signalingState);
-            remoteDescriptionSet = true;  // remote description 설정 완료
-            // 대기 중이던 ICE 후보 처리
-            iceCandidatesQueue.forEach(candidate => {
-                peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-            });
-            iceCandidatesQueue = [];  // 큐 초기화
-            return peerConnection.createAnswer(); // Answer 생성
-        })
-        .then(answer => {
-            console.log('Answer generated:', answer);
-            return peerConnection.setLocalDescription(answer); // Answer를 로컬 설명으로 설정
-        })
-        .then(() => {
-            console.log('Local description set to answer:', peerConnection.localDescription);
-            stompClient.send("/topic/signal/" + roomNo, {}, JSON.stringify({
-                type: 'answer',
-                answer: peerConnection.localDescription  // Answer를 STOMP로 전송
-            }));
-        })
-        .catch(error => console.error('Error handling offer:', error));
-}
-
+            // remote description을 설정
+            peerConnection.setRemoteDescription(remoteDescription)
+                .then(() => {
+                    console.log('Current signaling state after setting remote description:', peerConnection.signalingState);
+                    remoteDescriptionSet = true;  // remote description 설정 완료
+                    // 대기 중이던 ICE 후보 처리
+                    iceCandidatesQueue.forEach(candidate => {
+                        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                    });
+                    iceCandidatesQueue = [];  // 큐 초기화
+                    return peerConnection.createAnswer(); // Answer 생성
+                })
+                .then(answer => {
+                    console.log('Answer generated:', answer);
+                    return peerConnection.setLocalDescription(answer); // Answer를 로컬 설명으로 설정
+                })
+                .then(() => {
+                    console.log('Local description set to answer:', peerConnection.localDescription);
+                    stompClient.send("/topic/signal/" + roomNo, {}, JSON.stringify({
+                        type: 'answer',
+                        answer: peerConnection.localDescription  // Answer를 STOMP로 전송
+                    }));
+                })
+                .catch(error => console.error('Error handling offer:', error));
+        }
 
 
-// Answer를 받았을 때 처리
-function handleAnswer(answer) {
-    console.log('Answer received:', answer);
-    const remoteAnswerDescription = new RTCSessionDescription(answer);
+        // Answer를 받았을 때 처리
+        function handleAnswer(answer) {
+            console.log('Answer received:', answer);
+            const remoteAnswerDescription = new RTCSessionDescription(answer);
 
-        peerConnection.setRemoteDescription(remoteAnswerDescription)
-            .then(() => {
-                console.log('Remote answer set successfully');
-            })
-            .catch(error => console.error('Error setting remote answer:', error));
-}
+            peerConnection.setRemoteDescription(remoteAnswerDescription)
+                .then(() => {
+                    console.log('Remote answer set successfully');
+                })
+                .catch(error => console.error('Error setting remote answer:', error));
+        }
 
 
         // 받은 ICE candidate를 추가
@@ -322,15 +320,12 @@ function handleAnswer(answer) {
                 handleOffer(signal.offer);  // Offer 처리
             } else if (signal.type === 'answer') {
                 console.log('answer보내기');
-                console.log('answerTest',signal.answer);
+                console.log('answerTest', signal.answer);
                 handleAnswer(signal.answer);  // Answer 처리
             } else if (signal.type === 'candidate') {
                 handleCandidate(signal.candidate);  // ICE Candidate 처리
             }
         }
-
-
-
 
 
         /* 사이드바 */
@@ -550,20 +545,20 @@ function handleAnswer(answer) {
             });
         });
 
-        function showChannelWindow(roomId){
+        function showChannelWindow(roomId) {
             roomNo = roomId;
             $.ajax({
-                url:"/getChannelInfo",
-                method:"POST",
-                data:{"roomId":roomId},
-                success:function(response){
+                url: "/getChannelInfo",
+                method: "POST",
+                data: {"roomId": roomId},
+                success: function (response) {
                     console.log(response);
                     let channelFriendsList = '';
                     response.channelUsers.forEach(
-                            users=> channelFriendsList+=`
+                        users => channelFriendsList += `
                                     <li class="list-group-item"><img class="rightSidebarProfileImg" src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/\${users.profilePictureUrl}"></img>\${users.displayName}<li>
                             `
-                        )
+                    )
                     $("#header-main-div").empty();
                     let channelUi = `
                                 <%--      내부채널 생성 모달팝업      --%>
@@ -621,23 +616,37 @@ function handleAnswer(answer) {
                                         <div class="bi bi-person-plus" id="inviteFriend"></div>
                                     </div>
                                 </ul>
-                            </div>`;
-                    let innerChannels1 ='';
+                            </div>
+                            <div class="modal fade" id="inviteFriendsModal" tabindex="-1">
+                              <div class="modal-dialog">
+                                <div class="modal-content bg-dark">
+                                  <div class="modal-body p-5">
+                                    <h2 class="fw-bold mb-0 text-light">친구를 초대하기</h2>
+                                    <ul class="d-grid gap-4 my-5 list-unstyled small" id="invitationFriendList">
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            `;
+                    let innerChannels1 = '';
                     response.innerChannels.forEach(
-                        innerChannel=> {
-                            stompClient.subscribe('/topic/room/' + roomNo+'/'+innerChannel.id, function (message) {
+                        innerChannel => {
+                            stompClient.subscribe('/topic/room/' + roomNo + '/' + innerChannel.id, function (message) {
                                 let parsedBody = JSON.parse(message.body);
 
                                 $('#channelMessages').append(`<div style="color:white">\${parsedBody.message} \${parsedBody.messageTime}</div>`)
                             });
                             innerChannels1 += `<div class="innerChannel innerChannelName" data-id="\${innerChannel.id}" data-type="\${innerChannel.channelType}">\${innerChannel.channelName}`
-                        if(innerChannel.channelType=='voice'){
-                            innerChannels1+=`<div class="innerChannelType bi bi-volume-off"></div>`
-                        }else if(innerChannel.channelType=='text'){
-                            innerChannels1+=`<div class="voiceInnerChannelIcon innerChannelType bi bi-chat"></div>`
-                        }
-                        innerChannels1+=`</div>`
-                    });
+                            if (innerChannel.channelType == 'voice') {
+                                innerChannels1 += `<div class="innerChannelType bi bi-volume-off"></div>`
+                            } else if (innerChannel.channelType == 'text') {
+                                innerChannels1 += `<div class="voiceInnerChannelIcon innerChannelType bi bi-chat"></div>`
+                            }
+                            innerChannels1 += `</div>`
+                        });
                     $("#header-main-div").append(channelUi);
                     $("#chatInnerChannel").append(innerChannels1);
                     $("#channelRightSidebar").append(channelFriendsList);
@@ -645,66 +654,110 @@ function handleAnswer(answer) {
 
             });
         }
+
         let innerChannelId = null;
-            $(document).on('click','.innerChannelName',function(){
-                $('#chattingUI').empty();
-                let textUI =`
+        $(document).on('click', '.innerChannelName', function () {
+            $('#chattingUI').empty();
+            let textUI = `
                                 <div class="messages" id="channelMessages" style="height: 97%">
 
                                 </div>
                                 <div style="height: 3%">
                                     <input class="messageInput" style="width: 100%;height:100%"></input>
                                 </div>`;
-                let voiceUI =`
+            let voiceUI = `
                         <div>
-
-</div>
+                        </div>
                 `;
-                innerChannelId = $(this).data('id');
-                let channelType = $(this).data('type');
-                if(channelType=='text'){
-                    let messages = '';
-                    $.ajax({
-                        url:'/getMessage',
-                        data:{'innerChannelId':innerChannelId,'channelId':roomNo},
-                        method:'POST',
-                        success:function(response){
-                            response.forEach(
-                                message=>{messages += `<div style="color:white">\${message.message} \${message.messageTime}</div>`
-                            })
-                            $('#channelMessages').append(messages);
-                            console.log(response);
-                        }
-                    });
-                }
-                $('#chattingUI').append(channelType == 'text' ? textUI : voiceUI);
-            });
-            $(document).on('click','#addInnerChannel', function () {
-                $('#chatModal').modal('show');
-            });
-                function submitInnerChannelForm() {
-                    const channelName = $('#channelName').val();
-                    const channelType = $('input[name="channelType"]:checked').val();
-                    console.log('안녕하세요');
 
-                    $.ajax({
-                        url: '/addInnerChannel',
-                        method: 'POST',
-                        data: {
-                            'channelId': roomNo,
-                            'channelName': channelName,
-                            'channelType': channelType
-                        },
-                        success: function(response) {
-                            console.log("Channel created:", response);
-                            $('#chatModal').modal('hide');
-                        },
-                        error: function(error) {
-                            console.log("Error creating channel:", error);
-                            // Handle the error case
-                        }
-                    });
+
+            innerChannelId = $(this).data('id');
+            let channelType = $(this).data('type');
+            if (channelType == 'text') {
+                let messages = '';
+                $.ajax({
+                    url: '/getMessage',
+                    data: {'innerChannelId': innerChannelId, 'channelId': roomNo},
+                    method: 'POST',
+                    success: function (response) {
+                        response.forEach(
+                            message => {
+                                messages += `<div style="color:white">\${message.message} \${message.messageTime}</div>`
+                            })
+                        $('#channelMessages').append(messages);
+                        console.log(response);
+                    }
+                });
+            }
+            $('#chattingUI').append(channelType == 'text' ? textUI : voiceUI);
+        });
+        $(document).on('click', '#inviteFriend', function (event) {
+            $.ajax({
+                url: '/getFriendList',
+                method: 'POST',
+                data: {'userId':${loginMember.id}},
+                success: function (response) {
+                    $('#invitationFriendList').empty(); // 기존 리스트 지우기
+                    let friendListUI ='';
+                    console.log(response);
+                    response.forEach(friends=>
+                        friendListUI += `
+                        <li class="d-flex gap-4" style="align-items: center;">
+                            <img src="https://speakifybucket.s3.amazonaws.com/uploads/public/profile/\${friends.profilePictureUrl}" style="height:2rem; ">
+                            <h5 class="mb-0 text-light">\${friends.displayName}</h5>
+                            <button id="channel-invite-button" data-friend-id="\${friends.friendId}" type="button" class="btn btn-lg btn-primary w-20 fs-6" style="margin-left:auto">초대하기</button>
+                        </li>
+                    `
+                    );
+                    $('#invitationFriendList').append(friendListUI);
+                    $('#inviteFriendsModal').modal('show');
+
                 }
+            })
+            console.log('테스트');
+        });
+
+        $(document).on('click','#channel-invite-button',function(){
+            let friendId = $(this).data('friend-id');
+            $.ajax({
+                url:'/inviteToChannel',
+                method:'POST',
+                data:{
+                    userId:${loginMember.id},
+                    friendId:friendId
+                    },
+                success:function(response){
+                }
+            })
+        })
+
+        $(document).on('click', '#addInnerChannel', function () {
+            $('#chatModal').modal('show');
+        });
+
+        function submitInnerChannelForm() {
+            const channelName = $('#channelName').val();
+            const channelType = $('input[name="channelType"]:checked').val();
+            console.log('안녕하세요');
+
+            $.ajax({
+                url: '/addInnerChannel',
+                method: 'POST',
+                data: {
+                    'channelId': roomNo,
+                    'channelName': channelName,
+                    'channelType': channelType
+                },
+                success: function (response) {
+                    console.log("Channel created:", response);
+                    $('#chatModal').modal('hide');
+                },
+                error: function (error) {
+                    console.log("Error creating channel:", error);
+                    // Handle the error case
+                }
+            });
+        }
 
 
         // 친구 아이콘 클릭 시 친구 목록 불러오기
@@ -788,7 +841,6 @@ function handleAnswer(answer) {
             `;
 
 
-
             // 폼을 #header-main-div에 추가
             $('#header-main-div').append(formHtml);
         });
@@ -816,8 +868,9 @@ function handleAnswer(answer) {
 
         // 통화하기 함수
         var roomNo = null;
+
         function startCall(friendId, displayName) {
-            innerChannelId=null;
+            innerChannelId = null;
             console.log('친구아이디' + friendId);
             // 기존 채팅방이 있을 경우 제거
             $('#chat-room').remove();
@@ -922,7 +975,7 @@ function handleAnswer(answer) {
                     writer: ${loginMember.id},
                     message: message,
                     messageTime: new Date().getTime(),
-                    innerChannelId:innerChannelId
+                    innerChannelId: innerChannelId
                 }),
                 success: function (response) {
                     console.log(response);
@@ -940,8 +993,6 @@ function handleAnswer(answer) {
                 sendMessage($(this).val());
             }
         });
-
-
 
 
     </script>
