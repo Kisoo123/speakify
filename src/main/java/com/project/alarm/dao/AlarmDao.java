@@ -16,7 +16,6 @@ public class AlarmDao {
         return session.selectList("Alarm.findFriendRequest", param);
     }
     public int insertFriendRequestAlarm(SqlSessionTemplate session, int toUser){
-        System.out.println(toUser + "테스트용 dao");
         Alarm alarm = new Alarm();
         alarm.setToUser(Long.valueOf(toUser));
         session.insert("Alarm.insertFriendRequestAlarm", alarm);
@@ -37,4 +36,8 @@ public class AlarmDao {
     public void deleteAlarm(SqlSessionTemplate session, Map<String, Object> params){
         session.delete("Alarm.deleteAlarm", params);
     }
+    public void insertAlarm(SqlSessionTemplate session, Map<String, Object> params){
+        session.insert("Alarm.insertAlarm", params);
+    }
+
 }

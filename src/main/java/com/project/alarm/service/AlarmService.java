@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +21,7 @@ public class AlarmService {
     private final SimpMessagingTemplate messagingTemplate;
     private final SqlSessionTemplate session;
     private final AlarmDao dao;
+
 
     public String friendRequest(int toUser){
         User user = getCurrentUser(); //현재 로그인된 유저의 정보
@@ -56,6 +58,10 @@ public class AlarmService {
         return "success";
     }
 
+    public void insertAlarm(Map<String,Object> params){
+        dao.insertAlarm(session,params);
+    }
+
     public void sendFriendRequestNotification(int userId, int friendId) {
         // 친구 신청이 들어온 사용자에게 알림 전송
         messagingTemplate.convertAndSend("/topic/user/" + friendId , userId);
@@ -63,7 +69,6 @@ public class AlarmService {
 
     public static User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getPrincipal().toString());
         return (User) authentication.getPrincipal();
     }
 

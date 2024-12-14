@@ -444,7 +444,6 @@
                     console.log(response);
                     console.log("반환됨");
                     $('#search-result').empty(); // 검색 결과 초기화
-                    console.log()
                     // 서버에서 받은 데이터를 처리해서 결과를 동적으로 추가
                     response.forEach(user => {
                         let userElement =
@@ -460,7 +459,9 @@
                                     <li><a id="friend-request" class="dropdown-item" data-user-id="\${user.id}">친구 신청</a></li>
                                 </ul>
                             </div>`;
-                        $('#search-result').append(userElement);
+                        if(user.id != ${loginMember.id}){
+                         $('#search-result').append(userElement);
+                        }
                     });
 
                     // 검색 결과가 없을 경우 메시지 출력
@@ -718,13 +719,15 @@
         });
 
         $(document).on('click','#channel-invite-button',function(){
+            console.log(roomNo);
             let friendId = $(this).data('friend-id');
             $.ajax({
                 url:'/inviteToChannel',
                 method:'POST',
                 data:{
                     userId:${loginMember.id},
-                    friendId:friendId
+                    friendId:friendId,
+                    roomNo:roomNo
                     },
                 success:function(response){
                 }

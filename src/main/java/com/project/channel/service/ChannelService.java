@@ -13,6 +13,8 @@ public class ChannelService {
     private final SqlSessionTemplate session;
     private final ChannelDao dao;
     public void inviteToChannel(Map<String,Object>param){
-        dao.inviteToChannel(param,session);
+        if(!dao.selectInviteRequest(param,session)){
+            dao.inviteToChannel(param,session);
+        }
     }
 }
