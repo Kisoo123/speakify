@@ -22,7 +22,6 @@ public class ChannelController {
         param.put("friendId",friendId);
         param.put("roomNo",roomNo);
         service.inviteToChannel(param);
-        alarmService.insertAlarm(param);
         return null;
     }
 }

@@ -717,7 +717,7 @@
             })
             console.log('테스트');
         });
-
+ 
         $(document).on('click','#channel-invite-button',function(){
             console.log(roomNo);
             let friendId = $(this).data('friend-id');

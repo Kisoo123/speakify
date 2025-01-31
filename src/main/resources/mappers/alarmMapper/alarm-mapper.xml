@@ -53,7 +53,7 @@
         FROM alarm
         WHERE id=#{alarmId}
     </delete>
-    <insert id="insertAlarm" parameterType="map">
+    <insert id="insertAlarm" parameterType="map" useGeneratedKeys="true" keyProperty="id">
         insert into alarm(toUser, type)
         values (#{friendId},'channelInvite')
     </insert>

@@ -36,8 +36,9 @@ public class AlarmDao {
     public void deleteAlarm(SqlSessionTemplate session, Map<String, Object> params){
         session.delete("Alarm.deleteAlarm", params);
     }
-    public void insertAlarm(SqlSessionTemplate session, Map<String, Object> params){
+    public int insertAlarm(SqlSessionTemplate session, Map<String, Object> params){
         session.insert("Alarm.insertAlarm", params);
+        return Integer.parseInt(params.get("id").toString());
     }
 
 }

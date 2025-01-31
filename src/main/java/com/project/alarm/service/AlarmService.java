@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -58,9 +57,6 @@ public class AlarmService {
         return "success";
     }
 
-    public void insertAlarm(Map<String,Object> params){
-        dao.insertAlarm(session,params);
-    }
 
     public void sendFriendRequestNotification(int userId, int friendId) {
         // 친구 신청이 들어온 사용자에게 알림 전송

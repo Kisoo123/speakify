@@ -5,7 +5,7 @@
 <mapper namespace="Channel">
     <insert id="inviteToChannel" parameterType="map">
         insert into channelInvite(status, channelid, alarmid, touser, fromuser)
-        values ('PENDING',${roomNo},)
+        values ('PENDING',${roomNo},${alarmId},${userId},${friendId})
     </insert>
     <select id="selectInviteRequest" parameterType="map" resultType="com.project.channel.model.dto.ChannelInvite">
         select * from channelInvite
